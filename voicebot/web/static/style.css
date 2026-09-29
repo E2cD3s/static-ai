@@ -1,39 +1,34 @@
-/* The whole dashboard (public status, help, login, admin) in the Logicalgamer look, matching
-   logicalgamer.com, its AMP panel, webmail and status page: deep-space navy with a faint starfield,
-   rounded panels on a blueprint grid, one sky-blue accent, and the four controller-button colours
-   (red, yellow, green, purple) for states and the reply's stages. Fredoka for headings, Atkinson
-   Hyperlegible for text, IBM Plex Mono for numbers and logs. Dark only, like the website.
-   Layout language is unchanged: a small broadcast desk (on-air lamp, signal chain, board). */
-@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+/* The whole dashboard (public status, login, admin) in one theme taken from Static's profile picture:
+   a glitchy neon face on a dark plum CRT - cyan -> violet -> magenta ring, white features with a
+   cyan/magenta colour split, faint scanlines. Dark only: the avatar is a dark screen.
+   Layout language: a small broadcast desk (on-air lamp, signal chain, condensed display headings). */
+@import url("https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap");
 
 :root {
-  --bg: #0b1745;                    /* space */
-  --surface: #122258;               /* raised panels */
-  --surface2: #1b2e6e;              /* inputs-on-panels, tracks, chips */
-  --rule: #2a4180;                  /* lines */
-  --ink: #eef3ff;
-  --ink2: #aebbe0;
-  --ink3: #7f8cb8;
-  --cyan: #56b4f0;                  /* the website's sky blue */
-  --blue: #3f86f0;                  /* the planet */
-  --violet: #7f8cd6;                /* controller purple */
-  --magenta: #4cb96a;               /* controller green: Static speaking, on air */
-  --yellow: #f2b705;                /* controller yellow */
-  --red: #e0534a;                   /* controller red */
+  --bg: #1a181f;
+  --surface: #24212b;
+  --surface2: #2f2b38;
+  --rule: #413a4f;
+  --ink: #eef4f8;
+  --ink2: #b6aec6;
+  --ink3: #857c98;
+  --cyan: #38cdf2;
+  --blue: #6d8bff;
+  --violet: #a77cf5;
+  --magenta: #ff4fd0;
   --signal: var(--cyan);            /* links, focus, primary actions */
-  --ring: linear-gradient(90deg, var(--cyan), var(--blue));
-  --ok: #4cb96a;
-  --warn: #f2b705;
-  --bad: #e0534a;
-  --s-hear: var(--cyan);            /* the reply's stages: sky -> purple -> yellow -> green */
-  --s-look: var(--violet);
-  --s-think: var(--yellow);
+  --ring: linear-gradient(90deg, var(--cyan), var(--violet) 55%, var(--magenta));
+  --ok: #5fe3a8;
+  --warn: #ffc35a;
+  --bad: #ff5a6e;
+  --s-hear: var(--cyan);            /* the reply's stages follow the ring: cyan -> magenta */
+  --s-look: var(--blue);
+  --s-think: var(--violet);
   --s-speak: var(--magenta);
-  --grid: rgba(86, 180, 240, .06);  /* the blueprint grid on panels */
-  --display: "Fredoka", "Segoe UI", system-ui, sans-serif;
-  --sans: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --display: "Big Shoulders Display", "Arial Narrow", sans-serif;
+  --sans: "IBM Plex Sans", system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
-  --split: none;                    /* the old CRT colour split, retired */
+  --split: -1px 0 0 color-mix(in srgb, var(--cyan) 55%, transparent), 1px 0 0 color-mix(in srgb, var(--magenta) 55%, transparent);
   color-scheme: dark;
 }
 
@@ -41,21 +36,13 @@
 html, body { margin: 0; }
 body {
   color: var(--ink); font: 15px/1.5 var(--sans); min-height: 100vh;
-  background:
-    radial-gradient(1100px 600px at 80% -200px, color-mix(in srgb, var(--blue) 22%, transparent), transparent 70%),
-    radial-gradient(900px 500px at 0% 110%, color-mix(in srgb, var(--violet) 12%, transparent), transparent 70%),
-    var(--bg);
+  background: radial-gradient(900px 500px at 50% -120px, color-mix(in srgb, var(--violet) 14%, transparent), transparent 70%), var(--bg);
   background-attachment: fixed;
 }
-/* A faint starfield behind everything, like the website. Purely decorative. */
+/* CRT scanlines, like the avatar. Purely decorative. */
 body::before {
-  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1;
-  background:
-    radial-gradient(1px 1px at 23px 41px, rgba(238, 243, 255, .7), transparent) 0 0 / 347px 347px,
-    radial-gradient(1.5px 1.5px at 211px 167px, rgba(238, 243, 255, .7), transparent) 0 0 / 347px 347px,
-    radial-gradient(1px 1px at 131px 297px, rgba(159, 214, 250, .6), transparent) 0 0 / 347px 347px,
-    radial-gradient(2px 2px at 457px 401px, rgba(242, 183, 5, .45), transparent) 0 0 / 523px 523px,
-    radial-gradient(1.5px 1.5px at 97px 131px, rgba(238, 243, 255, .8), transparent) 0 0 / 523px 523px;
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 100;
+  background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, .018) 0 1px, transparent 1px 3px);
 }
 a { color: var(--signal); text-decoration: none; }
 a:hover { text-decoration: underline; }
@@ -625,79 +612,3 @@ input.switch:disabled { opacity: .5; cursor: not-allowed; }
 .plat-chips-inline { display: inline-flex; gap: 10px; }
 .plat-chips-inline:empty { display: none; }
 .cmds .cmd-eg { font-size: 12.5px; color: var(--ink3); margin-top: 2px; }
-
-/* ---------------------------------------------------------------- the Logicalgamer look
-   Shapes and details shared with logicalgamer.com, layered over the sections above: rounded panels
-   on a blueprint grid, sentence-case Fredoka headings (the old condensed capitals are retired),
-   controller dots on section titles, and the website's pill buttons with a pressable edge. */
-
-/* Panels */
-.card, .panel, details.cfg, .call, .ppl-item, .notes, .lines, .logs, dialog {
-  border-radius: 16px;
-}
-.card, .panel, details.cfg, .call, dialog {
-  background:
-    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 24px 24px,
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 24px 24px,
-    var(--surface);
-  border: 2px solid var(--rule);
-}
-.card .trend svg, .hero .trend svg { filter: drop-shadow(0 0 4px color-mix(in srgb, var(--cyan) 45%, transparent)); }
-.tally { border-radius: 16px; overflow: hidden; border: 2px solid var(--rule); }
-.tally div { border-color: var(--rule); }
-pre, code { border-radius: 8px; }
-.logs, .notes, .lines, pre { background: #060d2b; }
-
-/* Headings: Fredoka, sentence case */
-section.block > h2, .section-title, .login h2, dialog h3, .h-stages h3 {
-  font-family: var(--display); font-weight: 600; text-transform: none; letter-spacing: 0; text-shadow: none;
-}
-.h-title, .h-doc h2, .legal-title, .big-none { font-weight: 600; letter-spacing: -.01em; text-shadow: none; }
-.big { font-weight: 700; letter-spacing: -.02em; filter: drop-shadow(0 0 18px color-mix(in srgb, var(--cyan) 30%, transparent)); }
-.metric, .tally b { font-weight: 600; letter-spacing: 0; }
-/* Fredoka is much wider than the old condensed face, so the giant headlines come down a size */
-.big { font-size: clamp(44px, 10vw, 104px); }
-.big-none { font-size: clamp(30px, 5vw, 48px); }
-.h-title { font-size: clamp(40px, 7vw, 76px); }
-.legal-title { font-size: clamp(34px, 6vw, 60px); }
-
-/* Controller dots before the board's section titles, like the website's console bars */
-section.block > h2 {
-  padding-left: 50px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 38 10'%3E%3Ccircle cx='5' cy='5' r='4.5' fill='%23e0534a'/%3E%3Ccircle cx='19' cy='5' r='4.5' fill='%23f2b705'/%3E%3Ccircle cx='33' cy='5' r='4.5' fill='%234cb96a'/%3E%3C/svg%3E") 0 50% / 38px 10px no-repeat;
-}
-
-/* Buttons, pills and inputs */
-button, .btn { border-radius: 10px; font-family: var(--sans); }
-button.primary, .btn.primary {
-  background: var(--cyan); border-color: var(--cyan); color: #060d2b; font-family: var(--display); font-weight: 600;
-  border-radius: 999px; box-shadow: 0 3px 0 #2f7fbf;
-}
-button.primary:hover, .btn.primary:hover { background: #7cc6f5; border-color: #7cc6f5; box-shadow: 0 3px 0 #2f7fbf; }
-button.primary:active, .btn.primary:active { transform: translateY(2px); box-shadow: 0 1px 0 #2f7fbf; }
-button.solid-danger { border-radius: 999px; box-shadow: 0 3px 0 #9e2f28; }
-.btn.discord { border-radius: 999px; }
-.pill, .lamp, .ptag, .tags span, .off { border-radius: 999px; }
-.lamp { padding: 4px 9px 3px; }
-.lamp.on { background: var(--magenta); border-color: var(--magenta); color: #060d2b; box-shadow: 0 0 14px color-mix(in srgb, var(--magenta) 55%, transparent); }
-input, select, textarea { border-radius: 10px; border-width: 2px; }
-input[type="checkbox"] { border-width: 1px; }
-:focus-visible { outline-color: var(--yellow); }
-button:focus-visible, .btn:focus-visible, a:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
-.seg, .plat-tabs { border-radius: 999px; }
-.dot.on { background: var(--magenta); box-shadow: 0 0 10px var(--magenta); }
-
-/* Unsaved settings are the one thing that should shout: yellow, like a warning */
-.setting.changed .name { color: var(--yellow); }
-.savebar {
-  border-color: var(--yellow); border-radius: 14px;
-  box-shadow: 0 0 24px color-mix(in srgb, var(--yellow) 22%, transparent), 0 10px 30px rgba(0, 0, 0, .4);
-}
-
-/* Top strip and footer */
-.strip { background: color-mix(in srgb, #060d2b 88%, transparent); }
-.toast { border-radius: 12px; }
-.h-foot-credit .heart { color: var(--red); }
-.call { box-shadow: 0 24px 60px -30px color-mix(in srgb, var(--cyan) 45%, transparent); }
-/* The login card's old top accent line doesn't fit the rounder corners */
-.login::before { display: none; }
