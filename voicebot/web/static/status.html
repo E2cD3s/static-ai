@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Static Status</title>
+  <meta name="description" content="Live status of the Static Discord voice bot">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📡</text></svg>">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="strip">
+    <div class="strip-in">
+      <img id="avatar" alt="" class="hidden">
+      <div class="who">
+        <div class="who-name"><span id="name">Static</span> <span id="lamp" class="lamp">OFF AIR</span></div>
+        <div class="who-line" id="presence">connecting…</div>
+      </div>
+      <div class="strip-meta">
+        <span id="plats" class="plat-chips-inline"></span>
+        <span id="uptime">-</span>
+        <span id="guilds">-</span>
+        <span id="ping">-</span>
+        <span id="updated" class="upd">-</span>
+      </div>
+      <nav class="help-nav" aria-label="Pages">
+        <a href="/status" aria-current="page">Status</a>
+        <a href="/help">Help</a>
+        <a href="/admin">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap" aria-live="polite">
+    <p class="loading">Tuning in…</p>
+  </main>
+
+  <footer class="wrap foot" id="foot"></footer>
+  <footer class="wrap h-foot">
+    <span class="h-foot-name" data-fill="name">Static</span>
+    <a href="/status">Status</a>
+    <a href="/help">Help</a>
+    <a href="/terms">Terms of service</a>
+    <a href="/privacy">Privacy policy</a>
+    <p class="h-foot-credit">Built with <span class="heart" aria-label="love">♥</span> by logicalgamer and Claude. Hosted on a self&#8209;hosted Linux server.</p>
+  </footer>
+
+  <script src="/static/common.js"></script>
+  <script src="/static/board.js"></script>
+  <script src="/static/status.js"></script>
+</body>
+</html>

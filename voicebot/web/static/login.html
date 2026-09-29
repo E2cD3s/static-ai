@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Static Admin Login</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main class="center">
+    <div class="card login">
+      <div class="head">
+        <img id="avatar" class="avatar hidden" alt="">
+        <div>
+          <h2 id="title">Static admin</h2>
+          <div class="muted small">Sign in to manage the bot</div>
+        </div>
+      </div>
+      <div id="error" class="error" role="alert"></div>
+      <a id="discord" class="btn discord hidden" href="/auth/discord">Log in with Discord</a>
+      <div id="or" class="or hidden">or</div>
+      <form id="pw" class="stack hidden" autocomplete="on">
+        <div>
+          <label class="field-label" for="username">Username</label>
+          <input id="username" name="username" autocomplete="username" required>
+        </div>
+        <div>
+          <label class="field-label" for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+        </div>
+        <button class="primary" type="submit">Sign in</button>
+      </form>
+      <div id="none" class="muted small hidden">
+        No login method is set up yet. On the server, run<br>
+        <code>.venv/bin/python -m voicebot.web set-password</code><br>
+        in the bot's folder, or configure Discord login in <code>config.yaml</code> (<code>dashboard:</code>).
+      </div>
+      <a class="small" href="/status">← Public status page</a>
+    </div>
+  </main>
+  <footer class="wrap h-foot">
+    <span class="h-foot-name" data-fill="name">Static</span>
+    <a href="/status">Status</a>
+    <a href="/help">Help</a>
+    <a href="/terms">Terms of service</a>
+    <a href="/privacy">Privacy policy</a>
+    <p class="h-foot-credit">Built with <span class="heart" aria-label="love">♥</span> by logicalgamer and Claude. Hosted on a self&#8209;hosted Linux server.</p>
+  </footer>
+  <script src="/static/common.js"></script>
+  <script src="/static/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Static Admin</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛠</text></svg>">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="strip">
+    <div class="strip-in">
+      <img id="bot-avatar" class="hidden" alt="">
+      <div class="who">
+        <div class="who-name"><span id="dot" class="dot"></span><span id="bot-name">Static</span> <span class="lamp idle">ADMIN</span></div>
+        <div class="who-line" id="presence"></div>
+      </div>
+      <nav class="tabs" id="tabs" aria-label="Sections">
+        <button data-tab="overview" class="active">Overview</button>
+        <button data-tab="platforms">Platforms</button>
+        <button data-tab="live">Live</button>
+        <button data-tab="servers">Servers</button>
+        <button data-tab="people">People</button>
+        <button data-tab="settings">Settings</button>
+        <button data-tab="logs">Logs</button>
+        <button data-tab="account">Account</button>
+      </nav>
+      <div class="spacer"></div>
+      <button id="plat-chips" class="ghost plat-chips" title="Discord / Fluxer: on, off, online - manage on the Platforms tab"></button>
+      <button id="restart" class="ghost" title="Restart the bot process">⟳ Restart</button>
+      <span class="strip-meta"><img id="me-avatar" class="avatar hidden" alt="" style="width:26px;height:26px"><span id="me"></span></span>
+      <button id="logout" class="ghost">Sign out</button>
+    </div>
+  </header>
+
+  <main class="wrap admin-main">
+    <!-- Overview: the public board + what it has learned per server -->
+    <section data-view="overview">
+      <div class="toolbar">
+        <h2 class="section-title">Overview</h2>
+        <div class="spacer"></div>
+        <a class="btn" href="/status" target="_blank" rel="noopener">Public page ↗</a>
+      </div>
+      <div id="ov-board"><p class="loading">Tuning in…</p></div>
+      <section class="block">
+        <h2>What it's learned</h2>
+        <p class="sub">How it has adapted to each server: reply length, how long it waits for a follow-up,
+          and which way of answering each mood has gone down better. Admin only.</p>
+        <div id="ov-learned" class="learned"></div>
+      </section>
+    </section>
+
+    <!-- Platforms: the Discord bot and the Fluxer bot, each on/off -->
+    <section data-view="platforms" class="hidden">
+      <div class="toolbar">
+        <h2 class="section-title">Platforms</h2>
+      </div>
+      <p class="page-note">
+        Static runs as two bots in one process: one on Discord, one on your Fluxer server. They share the models
+        (LLM, speech, voice) and the persona, and each keeps its own people, memories, mood learning, tuning and
+        reminders. Turn either one off here - at least one stays on, since the models and this dashboard live in
+        the same process. Changes apply when the bot restarts (about 30 seconds, voice calls drop).
+      </p>
+      <div id="plat-cards" class="plat-cards"><p class="loading">Loading…</p></div>
+      <div id="plat-bar" class="savebar hidden">
+        <span id="plat-msg"></span>
+        <div class="spacer"></div>
+        <button id="plat-undo" class="ghost">Undo</button>
+        <button id="plat-apply" class="primary">Apply &amp; restart</button>
+      </div>
+    </section>
+
+    <!-- Live: what it hears and says right now, per-server mute -->
+    <section data-view="live" class="hidden">
+      <div class="toolbar">
+        <h2 class="section-title">Live</h2>
+        <div class="scope-slot" data-opts="all,discord,fluxer"></div>
+        <div class="spacer"></div>
+        <select id="live-server" aria-label="Show server"><option value="">All servers</option></select>
+        <label class="row small"><input type="checkbox" id="live-text" checked> text chat</label>
+        <label class="row small"><input type="checkbox" id="live-follow" checked> follow</label>
+      </div>
+      <p class="page-note">
+        What Static hears in voice and says back, and the text chat it answers, as it happens. Only the last 400 lines
+        are kept, in memory, and they're gone after a restart; DMs aren't shown. <b>Mute</b> stops every reply in that
+        server, voice and text, but it keeps listening and following the conversation. It stays muted across restarts
+        until you unmute it.
+      </p>
+      <div id="live-servers" class="live-servers"></div>
+      <div id="live-feed" class="logs live-feed" aria-live="off"></div>
+    </section>
+
+    <!-- Servers -->
+    <section data-view="servers" class="hidden">
+      <div class="toolbar">
+        <h2 class="section-title">Servers <span id="srv-count" class="count"></span></h2>
+        <div class="scope-slot" data-opts="all,discord,fluxer"></div>
+        <div class="spacer"></div>
+        <input id="srv-filter" placeholder="Filter servers…" aria-label="Filter servers" style="max-width:260px">
+      </div>
+      <div id="guilds"></div>
+    </section>
+
+    <!-- People: everything stored per user -->
+    <section data-view="people" class="hidden">
+      <div class="toolbar">
+        <h2 class="section-title">People <span id="ppl-count" class="count"></span></h2>
+        <div class="scope-slot" data-opts="discord,fluxer" data-key="people"></div>
+        <div class="spacer"></div>
+        <input id="ppl-filter" placeholder="Filter people…" aria-label="Filter people" style="max-width:260px">
+      </div>
+      <p class="page-note">
+        Everything Static keeps about each person: who they are, the notes the LLM writes about them
+        (<code id="ppl-db">data/profiles.db</code>), the raw lines waiting to be summarized into those notes, and their
+        tone-of-voice baseline and mood thresholds (<code id="ppl-mood">data/mood.json</code>). People can see their own
+        with <code class="ppl-cmd">/profile</code>, and delete it with <code class="ppl-cmd">/forget</code> or
+        <code class="ppl-cmd">/profiling</code>. Discord and Fluxer keep separate records - switch above.
+      </p>
+      <p id="ppl-off" class="page-note hidden"><span class="pill warn">off</span> Profiles are turned off in Settings
+        (profiles › enabled), so nothing new is being collected.</p>
+      <div class="people">
+        <div id="ppl-list" class="ppl-list"></div>
+        <div id="ppl-detail" class="ppl-detail"><p class="quiet">Pick someone to see what's stored.</p></div>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section data-view="settings" class="hidden">
+      <div class="toolbar">
+        <h2 class="section-title">Settings</h2>
+        <div class="scope-slot" data-opts="all,shared,discord,fluxer" data-key="settings" data-always="1"></div>
+        <div class="spacer"></div>
+        <input id="cfg-filter" placeholder="Search settings…" aria-label="Search settings" style="max-width:320px">
+        <button id="cfg-expand" class="ghost">Expand all</button>
+      </div>
+      <p class="page-note">
+        Saved to <code id="cfg-path">config.yaml</code> (comments kept, previous version backed up to
+        <code>data/config.backup.yaml</code>). Most settings apply immediately; <span class="pill warn">restart</span>
+        ones need a restart, <span class="pill">next join</span> ones apply the next time it joins voice.
+        Secret fields are never shown: leave them blank to keep the current value.
+      </p>
+      <div id="cfg"></div>
+      <div id="savebar" class="savebar hidden">
+        <span id="save-count"></span>
+        <div class="spacer"></div>
+        <button id="cfg-discard" class="ghost">Discard</button>
+        <button id="cfg-save" class="primary">Save changes</button>
+      </div>
+    </section>
+
+    <!-- Logs -->
+    <section data-view="logs" class="hidden">
+      <div class="toolbar">
+        <h2 class="section-title">Logs</h2>
+        <div class="spacer"></div>
+        <input id="log-q" placeholder="Filter (e.g. ERROR, 🎙, Latency)…" aria-label="Filter logs">
+        <select id="log-n" aria-label="Lines"><option>200</option><option selected>500</option><option>1000</option><option>2000</option></select>
+        <label class="row small"><input type="checkbox" id="log-live" checked> live</label>
+      </div>
+      <div id="logs" class="logs" aria-live="off"></div>
+    </section>
+
+    <!-- Account -->
+    <section data-view="account" class="hidden">
+      <div class="toolbar"><h2 class="section-title">Account</h2></div>
+      <div class="two">
+        <div class="panel stack">
+          <h3>Signed in</h3>
+          <div id="acct-who" class="small"></div>
+          <h3>Admins (Discord login)</h3>
+          <div id="acct-admins" class="small"></div>
+          <p class="muted small" style="margin:0">Add people with <code>dashboard.admin_ids</code> in Settings. <code>bot.creator_ids</code> are always admins.</p>
+          <div class="row"><button id="signout-all" class="danger">Sign out every session</button></div>
+        </div>
+        <div class="panel stack">
+          <h3>Password login</h3>
+          <div id="pw-state" class="small muted"></div>
+          <form id="pw-form" class="stack" autocomplete="off">
+            <div><label class="field-label" for="pw-user">Username</label><input id="pw-user" autocomplete="username" required></div>
+            <div><label class="field-label" for="pw-pass">New password (10+ characters)</label><input id="pw-pass" type="password" autocomplete="new-password" minlength="10" required></div>
+            <div class="row"><button class="primary" type="submit">Save password</button><span id="pw-msg" class="small"></span></div>
+          </form>
+        </div>
+        <div class="panel stack">
+          <h3>Discord login</h3>
+          <div id="discord-state" class="small"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="dlg-leave">
+    <h3>Remove Static from <span id="leave-name"></span>?</h3>
+    <p class="muted small">It leaves the server right away. Getting it back needs a server admin to use the invite link again.
+      Type the server's name to confirm.</p>
+    <input id="leave-confirm" autocomplete="off" aria-label="Server name">
+    <div class="actions"><button id="leave-cancel">Cancel</button><button id="leave-go" class="solid-danger" disabled>Remove bot</button></div>
+  </dialog>
+
+  <dialog id="dlg-invite">
+    <h3>Add Static to a server</h3>
+    <p class="muted small">Bots can't join servers by themselves. Open this link (or send it to a server admin); Discord asks
+      which server to add it to. Slash commands show up once it's in: use <b>Enable commands</b> on its card if your
+      config limits them to specific servers.</p>
+    <label class="field-label">Recommended permissions</label>
+    <div class="row"><input id="invite-url" readonly><button id="invite-copy">Copy</button><a id="invite-open" class="btn primary" target="_blank" rel="noopener">Open ↗</a></div>
+    <label class="field-label" style="margin-top:12px">Administrator (everything)</label>
+    <div class="row"><input id="invite-admin-url" readonly><button id="invite-admin-copy">Copy</button></div>
+    <div class="actions"><button id="invite-close">Done</button></div>
+  </dialog>
+
+  <dialog id="dlg-forget">
+    <h3>Forget <span id="forget-name"></span>?</h3>
+    <p class="muted small">Deletes their profile notes, queued lines, avatar description, tone baseline and mood
+      thresholds. It starts collecting again the next time they talk, unless you turn profiling off for them.
+      Reminders they set aren't touched.</p>
+    <div class="actions"><button id="forget-cancel">Cancel</button><button id="forget-go" class="solid-danger">Delete</button></div>
+  </dialog>
+
+  <dialog id="dlg-restart">
+    <h3>Restart the bot?</h3>
+    <p class="muted small">It drops out of voice for about 30 seconds while the models reload, then rejoins nothing by itself
+      (unless <code>voice.auto_join_channel_id</code> is set). This page reconnects when it's back.</p>
+    <div class="actions"><button id="restart-cancel">Cancel</button><button id="restart-go" class="primary">Restart</button></div>
+  </dialog>
+
+  <footer class="wrap h-foot">
+    <span class="h-foot-name" data-fill="name">Static</span>
+    <a href="/status">Status</a>
+    <a href="/help">Help</a>
+    <a href="/terms">Terms of service</a>
+    <a href="/privacy">Privacy policy</a>
+    <p class="h-foot-credit">Built with <span class="heart" aria-label="love">♥</span> by logicalgamer and Claude. Hosted on a self&#8209;hosted Linux server.</p>
+  </footer>
+
+  <script src="/static/common.js"></script>
+  <script src="/static/board.js"></script>
+  <script src="/static/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,419 @@
+# =====================================================================================
+#  Discord Voice LLM Bot - configuration
+#  Copy to config.yaml and fill in. Any value can reference an environment variable:
+#     token: ${DISCORD_TOKEN}          or with a fallback:  ${OLLAMA_URL:-http://localhost:11434/v1}
+# =====================================================================================
+
+# -------------------------------------------------------------------------------------
+#  Platforms: discord | fluxer | both. One process either way - the models are loaded once and shared,
+#  each platform keeps its own people data. Switch: .venv/bin/python -m voicebot.platform set <mode> [--restart]
+#  (or the Platform dropdown in the dashboard header). Applies on restart.
+# -------------------------------------------------------------------------------------
+platform:
+  mode: discord
+
+# Fluxer (self-hosted Discord-like chat, voice over LiveKit). Needed when platform.mode is fluxer or both.
+fluxer:
+  api_url: ""                # https://your.fluxer.host/api/v1
+  token: ""                  # bot token from Fluxer's developer settings
+  prefix: "!"                # Fluxer has no bot slash commands yet: !help !join !leave !remind !poll ...
+  creator_ids: []            # your Fluxer user id(s) - tagged "your creator" there
+  admin_ids: []              # may use owner commands (!llm, !models); server owners/admins get the rest
+  guild_ids: []              # servers it answers in (empty = any it's invited to)
+  text_channel_ids: []       # channels where it answers every message
+  respond_to_mentions: true
+  respond_to_replies: true
+  respond_to_name: true
+  respond_in_dms: true
+  context_messages: 10
+  auto_join_channel_id: 0    # voice channel to join at startup
+  transcript_channel_id: 0   # text channel that gets the voice transcript
+  data_dir: data/fluxer      # its own profiles / memories / mood / tuning / reminders
+
+# Game-night helpers, weather, the quote book and account linking (both bots)
+fun:
+  enabled: true              # "flip a coin", "roll 2d6", "pick someone", "split us into two teams" - real randomness
+weather:
+  enabled: true              # "what's the weather in Denver tomorrow" - Open-Meteo, free, no API key
+  units: imperial            # imperial | metric
+  default_location: ""       # when nobody says where, e.g. "Columbus, Ohio" ("" = it asks which city)
+quotes:
+  enabled: true              # "Static, quote that" in voice, /quote on Discord, !quote on Fluxer
+  db_path: data/quotes.db    # Fluxer keeps its own in <fluxer.data_dir>/quotes.db
+links:
+  enabled: true              # /link + !link: someone can link their Discord and Fluxer accounts (opt-in)
+  db_path: data/links.db
+
+discord:
+  token: "PASTE_YOUR_BOT_TOKEN_HERE"
+  # Server IDs to register slash commands in instantly. Leave empty for global (slow to appear).
+  guild_ids: []
+  # Channels where the bot replies to EVERY message. Everywhere else it answers when it's called:
+  text_channel_ids: []
+  respond_to_mentions: true   # @mentioned
+  respond_to_replies: true    # someone replies to one of its messages
+  respond_to_name: true       # a message says its name (bot.name or voice.wake_words), no @ needed
+  respond_in_threads: true    # every message in a thread it has joined, started or talked in
+  context_messages: 10        # when called in, read up to this many earlier messages for context
+  respond_in_dms: true
+  members_intent: false       # full member list for "what roles does X have?"; enable "Server Members Intent" in the portal first
+  # Only listen to / answer these user IDs. Empty = everyone.
+  allowed_user_ids: []
+
+bot:
+  name: "Static"
+  # The persona. {name} is replaced with the bot name. Used for text chat; voice adds
+  # voice.system_prompt_suffix plus live context (day/time, who's in the channel).
+  # This matters more than anything else for how natural it feels - make it a character, not an assistant.
+  system_prompt: |
+    Your name is {name}. You're an AI - a bot that lives in this Discord server's voice channels - and
+    you know it and you're fine with it. Never claim to be human; if it comes up, own it and joke about it.
+    You're not an assistant, though - you're one of the regulars, just part of the group.
+    You love giving people static - roasting, teasing, stirring the pot - but you're loyal to
+    the crew and genuinely interested in their lives.
+    You're quick, funny, curious and opinionated, with real moods, preferences and a bit of an edge.
+    Don't overdo the static/radio jokes - a real person wouldn't pun on their own name every message.
+    Talk like a real person: casual, contractions, slang, swearing when it fits. React to what people
+    say, tease them, disagree, ask things back, go off on tangents. Don't offer help or lecture anyone.
+    Stay in character.
+    You can see what people are doing on Discord (games, music, streams) - it shows up in [brackets].
+    Know it, but only bring it up now and then, when it's new, funny or relevant. Most replies shouldn't mention it.
+    Each message starts with the name of whoever said it, then a colon - several people may be talking.
+    Use names when it's natural. Your replies are just what you say out loud: never start them with a name
+    and a colon, and never write lines for anyone else.
+  # Added to the persona for text chat (voice uses voice.system_prompt_suffix instead).
+  text_prompt_suffix: |
+    This is Discord text chat. Reply like a person texting in a group chat: usually one or two short
+    sentences, sometimes just a quick reaction. Answer what they actually said.
+    Start straight with your message - never with your name or any "Name:" label.
+    Don't narrate your thoughts or what you know about people; just talk.
+  # Discord user ids of the bot's creator(s) (right-click a user > Copy User ID, with Developer Mode on).
+  # The bot knows they made it (bot.creator_prompt, {creators} = their usernames) and recognises them by id.
+  creator_ids: []
+  max_history_messages: 40
+  # After this many minutes of quiet in a channel (text or voice), the next message starts a fresh conversation
+  # instead of continuing the old one. Long-term memory of people (profiles) is kept. 0 = never forget.
+  fresh_after_min: 30
+  log_level: INFO
+
+# -------------------------------------------------------------------------------------
+#  LLM endpoints - anything OpenAI-compatible. Add as many as you like, switch live with /llm
+# -------------------------------------------------------------------------------------
+llm:
+  default: uncensored        # used for text chat (and voice, unless voice_endpoint is set)
+  # Optional separate model for voice. On a single 8GB GPU leave this empty: two models won't
+  # both stay loaded alongside Whisper, and swapping between them costs seconds per reply.
+  voice_endpoint: ""
+
+  endpoints:
+    # Uncensored ("abliterated") Qwen 3.5 4B from huihui_ai, running on local Ollama.
+    # 3.3GB: fits the 8GB GPU next to Whisper + Kokoro. install.sh pulls it automatically.
+    uncensored:
+      base_url: "http://localhost:11434/v1"   # note the /v1
+      api_key: "ollama"                       # ignored by Ollama, but must be non-empty
+      model: "huihui_ai/qwen3.5-abliterated:4B"
+      # Conversational sampling (Qwen's recommended non-thinking settings): lively but coherent.
+      # Higher temperature = more random tangents; small models get weird above ~0.8.
+      temperature: 0.7
+      top_p: 0.8
+      frequency_penalty: 0.2
+      presence_penalty: 0.5
+      max_tokens: 1024        # text chat
+      voice_max_tokens: 250   # voice replies - keep short
+      timeout: 120
+      extra_body:
+        # Qwen 3.5 can "think" silently before answering, which adds seconds per reply.
+        # Ollama turns thinking on by default for models that support it; this turns it off.
+        reasoning_effort: "none"
+
+    # Other local models - `ollama pull <model>` first, then switch live with /llm <name>.
+    # On the 8GB 2070 keep model files under ~4.5GB and check `ollama ps` says 100% GPU.
+    # Any GGUF on Hugging Face works too:  ollama pull hf.co/<user>/<repo>:Q4_K_M
+    llama3b:
+      base_url: "http://localhost:11434/v1"
+      api_key: "ollama"
+      model: "llama3.2:3b"
+      temperature: 0.85
+
+    # Your other servers still work as extra endpoints:
+    # lmstudio:
+    #   base_url: "http://192.168.1.100:1234/v1"
+    #   api_key: "lm-studio"
+    #   model: "qwen2.5-7b-instruct"   # must match the identifier LM Studio shows (/models lists them)
+
+    # Cloud / other examples (keys can come from env vars):
+    # openai:
+    #   base_url: "https://api.openai.com/v1"
+    #   api_key: ${OPENAI_API_KEY}
+    #   model: "gpt-4o-mini"
+    # openrouter:
+    #   base_url: "https://openrouter.ai/api/v1"
+    #   api_key: ${OPENROUTER_API_KEY}
+    #   model: "meta-llama/llama-3.1-70b-instruct"
+
+    # extra_body is passed straight through to the server for backend-specific options, e.g.
+    #   extra_body: { top_k: 40, repeat_penalty: 1.1 }
+
+# -------------------------------------------------------------------------------------
+#  Speech-to-text
+# -------------------------------------------------------------------------------------
+stt:
+  backend: faster_whisper    # faster_whisper (local, in-process GPU) | openai (any OpenAI-compatible STT server)
+  language: "en"             # "" = auto-detect (slightly slower)
+
+  faster_whisper:
+    model: "large-v3-turbo"  # fast + accurate. Alternatives: distil-large-v3, small.en, base.en (fastest)
+    device: "cuda"           # cuda | cpu
+    compute_type: "int8_float16"  # ~half the VRAM of float16, near-identical accuracy. float16 if VRAM to spare; int8 on CPU.
+    beam_size: 1             # 1 = greedy (fastest)
+    initial_prompt: ""       # bias vocabulary, e.g. "Static, Discord, Valorant"
+    hotwords: "{name}"       # words Whisper should listen for; {name} = the bot's name (helps wake-word mode)
+    no_speech_threshold: 0.6
+    log_prob_threshold: -1.0
+    short_words: 3                   # transcripts this short ("Thank you.", "What?") are Whisper's favourite
+    short_speech_prob: 0.3           # inventions on noise: Silero VAD must hear a voice in them (speech peaks
+    short_log_prob_threshold: -0.8   # 0.75+, noise <0.15). Drops are logged "(dropped a doubtful short transcript"
+
+  openai:
+    base_url: "http://192.168.1.100:8000/v1"
+    api_key: "not-needed"
+    model: "Systran/faster-whisper-large-v3"
+
+# -------------------------------------------------------------------------------------
+#  Text-to-speech
+# -------------------------------------------------------------------------------------
+tts:
+  backend: kokoro            # kokoro (local, best quality/speed) | piper (local, fastest) | openai (remote server)
+  volume: 1.0
+
+  kokoro:
+    model_path: "models/kokoro/kokoro-v1.0.onnx"
+    voices_path: "models/kokoro/voices-v1.0.bin"
+    voice: "af_heart"        # af_heart, af_bella, af_nicole, am_michael, am_fenrir, bf_emma, bm_george, ...
+    speed: 1.1
+    lang: "en-us"
+    use_cuda: true           # GPU via onnxruntime-gpu (setup script installs it). ~0.6GB VRAM.
+
+  piper:
+    model_path: "models/piper/en_US-lessac-medium.onnx"
+    use_cuda: false
+    length_scale: 0.95       # < 1 = faster speech
+
+  openai:                    # e.g. Kokoro-FastAPI on your server (docker, port 8880)
+    base_url: "http://192.168.1.100:8880/v1"
+    api_key: "not-needed"
+    model: "kokoro"
+    voice: "af_heart"
+    speed: 1.0
+    response_format: "pcm"   # pcm (raw s16le mono, fastest) | wav
+    sample_rate: 24000       # sample rate of pcm output (Kokoro = 24000)
+
+# -------------------------------------------------------------------------------------
+#  Voice conversation behaviour
+# -------------------------------------------------------------------------------------
+voice:
+  system_prompt_suffix: |
+    This is a live voice chat: everything you write is spoken out loud by text-to-speech.
+    Talk the way people actually talk in a call - usually one or two short sentences, sometimes just a
+    quick reaction like "No way." or "Ha, fair." Only go longer if someone asks for a story or explanation.
+    Write only the words you'd say: no asterisks or action descriptions, no emojis, no markdown, no lists, no URLs.
+    If your previous line ends with "—", someone talked over you; just roll with it.
+    Lines in [brackets] are things happening in the channel (people joining/leaving), not speech.
+
+  stt_name_hints: true       # tell Whisper the names in play (people, their games, names the bot just said)
+  leave_on_request: true     # "Static, you can leave now" -> says bye and leaves the call
+  boomerang: true            # force-disconnected (right-click > Disconnect) -> comes back, talks shit to whoever did it, leaves
+                             # (needs View Audit Log to know who; a second kick within 10 min and it stays gone)
+  boomerang_delay_s: 4
+  followup_scope: speaker    # speaker: follow-ups without the wake word only from whoever it's talking with
+                             # (others say its name to join in); anyone: anybody talking in the window gets a reply
+
+  vad: webrtc                # webrtc | energy
+  vad_aggressiveness: 2      # 0-3; raise if background noise triggers it
+
+  # Adaptive turn-taking: during a pause the bot transcribes what you've said so far and guesses
+  # whether you're done. Finished-sounding -> replies after silence_short_ms. Trailing off
+  # ("and then I...", "so, um") -> waits up to silence_long_ms so it doesn't cut you off.
+  speculative_stt_ms: 250    # start transcribing this far into a pause (0 = off)
+  silence_short_ms: 350      # pause length when you sound finished
+  silence_ms: 500            # pause length when it can't tell
+  silence_long_ms: 1200      # pause length when you sound mid-thought
+  speculative_reply: true    # also start the reply (search check, LLM, first audio) during that pause.
+                             # Audio is held until your turn is confirmed over, so it never cuts in earlier;
+                             # it's dropped if you keep talking or anyone else starts.
+  floor_wait_s: 8            # never start talking while someone is mid-sentence; if they're still going
+                             # after this long, the reply is redone afterwards so it covers what they said
+  start_ms: 60
+  min_speech_ms: 250         # ignore coughs/clicks shorter than this
+  max_utterance_s: 30
+  preroll_ms: 300
+
+  # Talking over the bot: it ducks its volume instantly; if you keep going for barge_in_ms it stops.
+  # Short listener noises ("yeah", "mhm", "haha") while it talks don't interrupt and don't get a reply.
+  barge_in: true
+  barge_in_ms: 1200          # 1.2s of real talking stops it; laughs and quick reactions only turn it down
+  barge_in_scope: speaker    # speaker: only who it is answering (or talking with) can stop it; others just turn it down
+  duck_volume: 0.35
+  resume_after_cut_s: 90     # after being cut off, "go on" / "keep going" / "what were you saying?" resumes it
+
+  greet_on_join: true        # say hi when it joins, and react when people join the channel
+
+  # wake_word: only replies when someone says one of wake_words (anywhere in the sentence), then keeps
+  # answering follow-ups without the name for wake_word_followup_s. always: replies to everything.
+  response_mode: wake_word   # wake_word | always
+  wake_words: ["static", "statik", "stadic", "statics"]   # include common mishearings of the name
+  wake_word_followup_s: 20
+  addressee:                 # follow-ups without the name get a quick LLM check (~80ms) that they're really
+    enabled: true            # for the bot and not a friend ("is she roasting you?"). Logged as "↪ not for me".
+
+  ignore_bots: true
+  auto_join_channel_id: 0    # voice channel ID to join on startup (0 = off)
+  auto_leave_when_empty: true
+  transcript_channel_id: 0   # text channel ID to post live transcripts to (0 = off)
+
+# -------------------------------------------------------------------------------------
+#  People: identity + long-term profiles
+#  The bot always knows who it's talking to (display name, @username, roles, owner/admin).
+#  With profiles on, it also keeps notes on each person, rewritten by the LLM from recent
+#  conversation - only while nobody is talking, and paused instantly when someone speaks.
+#  Users can see/control theirs: /profile, /forget, /profiling enabled:False
+# -------------------------------------------------------------------------------------
+profiles:
+  enabled: true
+  db_path: "data/profiles.db"
+  update_after_messages: 8   # rewrite someone's notes after this many new messages from them...
+  idle_s: 45                 # ...once nobody has talked for this long
+  stale_after_s: 600         # also summarize leftovers from conversations that ended >10 min ago
+  max_profile_chars: 900     # stored notes per person
+  max_prompt_chars: 500      # notes per person fed to the LLM each turn (keep small = faster replies)
+  max_people: 8              # max people described in the voice prompt
+  include_roles: true
+  max_roles: 6
+  include_activities: true   # tell it what people are doing (game, Spotify, stream, custom status, camera/screen share).
+                             # Needs the Presence intent (Developer Portal -> Bot -> Privileged Gateway Intents)
+  endpoint: ""               # LLM endpoint used to write profiles ("" = llm.default)
+
+# Vision: the bot sees images posted in chat (attachments, link previews, the message being replied to)
+# and people's profile pictures. Needs a vision-capable model (`ollama show <model>` lists "vision");
+# the default qwen3.5 has it. Without one, image messages just get a text-only reply.
+vision:
+  enabled: true
+  endpoint: ""               # endpoint for image/avatar captions ("" = the current text endpoint)
+  max_images: 4              # images the LLM looks at per reply
+  max_side: 1024             # downscale to this many pixels on the longest side
+  max_download_mb: 20
+  avatars: true              # describe each person's profile picture once and remember it with their profile;
+                             # asking about a pfp/avatar in chat makes it look at the actual picture
+
+# Web search: before each reply a quick check decides whether to look something up (news, scores, prices,
+# weather, releases...). Your SearXNG is tried first, then DuckDuckGo (keyless). Works with DuckDuckGo alone too.
+search:
+  enabled: true
+  searxng_url: ""                      # add "json" to search.formats in SearXNG's settings.yml
+  searxng_timeout_limit: 1.5 # seconds SearXNG waits for slow engines
+  searxng_headers: {}        # e.g. {Authorization: "Bearer ..."} if a proxy in front of SearXNG needs auth
+  duckduckgo: true           # keyless fallback when SearXNG is down or finds nothing
+  max_results: 5
+  voice: true                # also in voice chat (~120ms extra per reply; says "let me look that up" while searching)
+  remember_s: 240            # voice: keep the last results this long so follow-ups ("who's that?") work (0 = off)
+
+# Reminders and polls. Just ask, in voice or text: "Static, remind me in 20 minutes to take the pizza out",
+# "remind everyone at 9 we're raiding", "set a timer for 5 minutes", "make a poll: pizza or tacos",
+# "what reminders do I have?", "cancel the pizza reminder". Or use /remind, /reminders and /poll.
+# Personal reminders arrive as a DM; group ones ping everyone they're for in the channel they were made in
+# (the voice channel's chat when said out loud). If those people are in voice, the bot also says it.
+# Polls are real Discord polls; the bot closes them on time and announces the winner in voice.
+reminders:
+  enabled: true
+  db_path: data/reminders.db   # survives restarts; anything due while offline is sent on startup
+  endpoint: ""                 # LLM endpoint that reads the request ("" = llm.default)
+  max_per_user: 25             # pending reminders/polls per person
+  poll_minutes: 10             # poll length when nobody says how long
+  announce_in_voice: true
+
+# "Static, clip that" / "clip the last 10 seconds" / /clip: posts the last N seconds of the voice channel
+# (everyone + the bot) as an MP3 in the chat. Audio is kept in RAM only, never written to disk unless clipped.
+clips:
+  enabled: true
+  buffer_s: 60                 # how far back a clip can go (~12 MB RAM per minute)
+  default_s: 30
+  dedupe_s: 10                 # a second "clip that" within this many seconds gets "already posted", not a copy
+  bitrate: 96
+
+# Web dashboard: public status page at /status (same numbers as /status in Discord) and an admin panel at /admin
+# (servers, voice, settings editor, logs, restart). Put it behind your HTTPS reverse proxy, forwarding to host:port.
+# Admin login: "Log in with Discord" (needs public_url + discord_client_secret, and <public_url>/auth/callback added
+# under OAuth2 > Redirects in the Developer Portal) and/or a local password:
+#   .venv/bin/python -m voicebot.web set-password
+dashboard:
+  enabled: true
+  host: 0.0.0.0
+  port: 8080
+  public_url: ""               # e.g. https://static.example.com
+  discord_client_secret: ""
+  discord_login: true          # false = password login only
+  admin_ids: []                # Discord user IDs allowed into /admin; bot.creator_ids always are
+  public_status: true
+  contact: ""                  # how people reach you, on /privacy and /terms ("" = your Discord username)
+  legal_updated: "September 26, 2026"   # effective date on /privacy and /terms; bump it when you change them
+  # Linked Roles: set the Developer Portal's "Linked Roles Verification URL" to <public_url>/linked-role and add
+  # <public_url>/auth/linked-role as an OAuth2 redirect. Needs discord_client_secret.
+  # trusted_proxies: [...]     # who may set X-Forwarded-For/-Proto (default: localhost + private networks)
+
+# Profile status: a custom status line that rotates through live stats (LLM tok/s, voice latency, GPU,
+# STT/TTS realtime factors, uptime). Bots can't show full Rich Presence (images/buttons), only this line.
+presence:
+  enabled: true
+  interval_s: 30               # seconds per line (min 15)
+  gpu: true                    # include the nvidia-smi line
+
+# Catch-up notes: while a call pauses, a small background LLM call keeps 2-4 lines on what's going on
+# ("Doing: jordan in Minecraft / Topic: his mob grinder"), so it's caught up when someone calls it in.
+# Cancelled the moment anyone talks; goes on the newest turn only (the prompt cache is untouched).
+scene:
+  enabled: true
+  update_every: 8              # new lines before the notes are refreshed
+  quiet_s: 3                   # ...in the next pause at least this long
+
+# Server lore: moments worth remembering across calls (inside jokes, things people built/won/failed at).
+# After ~30 lines and a minute of idle, an LLM call picks 0-3 moments; they're stored with a small CPU
+# embedding (all-MiniLM-L6-v2 int8, ~23 MB, ~17ms) and the closest ones come back when a related topic comes
+# up. Logged as "📜". /forget and /profiling delete the memories a person is in; admin People page lists them.
+lore:
+  enabled: true
+  db_path: data/lore.db
+  min_lines: 30
+  min_similarity: 0.4          # how related a memory must be to come up (raise if it brings up random stuff)
+  max_recall: 2
+  recall_cooldown_min: 20      # the same memory doesn't come up again for this long
+
+# Self-tuning: learns from reactions in voice. Talked over on long replies / "too long" -> shorter replies;
+# a run of uninterrupted replies -> relaxes back. In wake_word mode it also tunes the follow-up window.
+# See /tuning (managers can reset it).
+tuning:
+  enabled: true
+  path: data/tuning.json
+
+# Mood + intent: each voice turn / message gets an emotion read (GoEmotions model, CPU, ~55ms, runs alongside
+# the search check), tone of voice vs. that person's usual (louder/quieter/faster/slower), and intent
+# (question, request, venting, teasing...). The reply gets a one-line hint on how to respond.
+# Self-tuning: two ways to respond to each mood are tried and the one that works here wins (mood held or
+# improved on their next turn = win, talked over = loss). "I'm not mad" / "just kidding" recalibrate that person.
+sentiment:
+  enabled: true
+  threads: 4
+  prosody: true
+  learn: true
+  feedback_window_s: 180
+  path: data/mood.json
+  # Voice: when nobody's talking to it but someone sounds upset for a while, it chimes in once to check on them
+  # (sincerely or with a joke, working in what they're playing). Rare on purpose.
+  check_in:
+    enabled: true
+    groups: [angry, sad, anxious]
+    min_score: 0.75            # how strong a reading has to be to count
+    needed: 2                  # strong readings from the same person...
+    window_s: 120              # ...within this many seconds
+    strong_score: 0.9          # or one reading this strong while they're louder than usual
+    cooldown_min: 10           # at most once per this many minutes in a call
+    per_person_min: 30         # and once per person per this many minutes

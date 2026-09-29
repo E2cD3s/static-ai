@@ -1,0 +1,192 @@
+# Replay test set for `python -m voicebot.replay` (kinds and fields: see voicebot/replay.py).
+# Add a case whenever the bot gets something wrong in a call - it keeps the fix from quietly regressing.
+
+# ---------------------------------------------------------------- is a follow-up line for the bot?
+- id: addr-all-right
+  kind: addressee
+  recent: ["alex: Clip that. Clip that.", "Static: Ha, fair. A solid little chunk of chaos right there."]
+  speaker: alex
+  line: All right.
+  for_me: false
+- id: addr-lets-hear-it
+  kind: addressee
+  recent: ["Static: Ha, fair. A solid little chunk of chaos right there.", "alex: All right."]
+  speaker: alex
+  line: We got it. We got it. Let's hear it.
+  for_me: false
+- id: addr-pushback-roast
+  kind: addressee
+  recent: ["alex: No, you roast him.", "Static: jordan, you're predictable, like a perfectly placed piece of decorative wiring.", "sam_plays: I'll take that as a compliment."]
+  speaker: alex
+  line: How's that a roast? Bitch, you're stupid.
+  for_me: true
+- id: addr-about-her-to-friend
+  kind: addressee
+  recent: ["Static: So you're saying built-in is synonymous with aesthetic confidence?", "Static: nah, I'm saying you're boringly perfect.", "jordan_x: What?"]
+  speaker: alex
+  line: Okay, is she making fun of you or is she raising you up still?
+  for_me: false
+- id: addr-followup-question
+  kind: addressee
+  recent: ["alex: Static, what's the best weapon in Minecraft?", "Static: Netherite sword, obviously. Keep up."]
+  speaker: alex
+  line: What about a mace though?
+  for_me: true
+- id: addr-disagree
+  kind: addressee
+  recent: ["alex: Static, what's the best weapon in Minecraft?", "Static: Netherite sword, obviously. Keep up."]
+  speaker: alex
+  line: Nah, you're wrong, the mace clears.
+  for_me: true
+- id: addr-game-callout
+  kind: addressee
+  recent: ["alex: Static, what's the best weapon in Minecraft?", "Static: Netherite sword, obviously. Keep up."]
+  speaker: alex
+  line: Dude, go left, there's a creeper behind you.
+  for_me: false
+- id: addr-react-to-joke
+  kind: addressee
+  recent: ["alex: Static, tell me a joke.", "Static: Your K/D ratio. That's the joke."]
+  speaker: alex
+  line: Oh my god, that's brutal.
+  for_me: true
+- id: addr-grab-drink
+  kind: addressee
+  recent: ["alex: Static, what time is it?", "Static: Almost one. Go to bed."]
+  speaker: alex
+  line: Hang on, I need to grab a drink.
+  for_me: false
+- id: addr-what-can-you-do
+  kind: addressee
+  recent: ["alex: Static, who made you?", "Static: d3s built me. Obviously."]
+  speaker: alex
+  line: And what can you do?
+  for_me: true
+- id: addr-names-friend
+  kind: addressee
+  recent: ["alex: Static, who made you?", "Static: d3s built me. Obviously."]
+  speaker: alex
+  line: Sam, did you hear that?
+  people: [alex, sam_plays, jordan_x]
+  for_me: false
+
+# ---------------------------------------------------------------- calculator
+- {id: calc-times, kind: calc, line: "Static, what's 17 times 23?", expect: "= 391"}
+- {id: calc-percent, kind: calc, line: "what is 15% of 80", expect: "= 12"}
+- {id: calc-sqrt, kind: calc, line: "whats the square root of 144", expect: "= 12"}
+- {id: calc-precedence, kind: calc, line: "what's 3 plus 4 times 2?", expect: "= 11"}
+- {id: calc-miles, kind: calc, line: "convert 5 miles to km", expect: "8.04672 km"}
+- {id: calc-feet-in-mile, kind: calc, line: "how many feet in a mile", expect: "5,280 feet"}
+- {id: calc-temp, kind: calc, line: "what's 72 f in celsius", expect: "22.22°C"}
+- {id: calc-tokyo, kind: calc, line: "what time is it in Tokyo", expect: "in Tokyo it's"}
+- {id: calc-not-died-twice, kind: calc, line: "I died 2 times in that raid", none: true}
+- {id: calc-not-24-7, kind: calc, line: "we play 24/7", none: true}
+- {id: calc-not-10-10, kind: calc, line: "it was 10/10", none: true}
+- {id: calc-not-height, kind: calc, line: "I'm 6 foot 2", none: true}
+
+# ---------------------------------------------------------------- search check
+- id: search-game-diamonds
+  kind: search
+  line: "alex: Static, what's the best way to find diamonds?"
+  context: "[Discord shows what people are up to right now - jordan_x: playing Minecraft]"
+  expect: minecraft
+- id: search-game-grinder
+  kind: search
+  line: "alex: Static, what powers a mob grinder?"
+  context: "[Discord shows what people are up to right now - jordan_x: playing Minecraft]"
+  expect: grinder
+- id: search-news
+  kind: search
+  line: "alex: Static, who won the Lakers game last night?"
+  expect: lakers
+- id: search-not-banter
+  kind: search
+  line: "alex: Static, you're so dumb lol"
+  none: true
+
+# ---------------------------------------------------------------- voice replies
+- id: reply-roast-jordan
+  kind: reply
+  history:
+    - "jordan_x: Oh, here, I'll set it up for you too. Hang on."
+    - "alex: Oh, the fans pushed the mobs into it. Oh, smart. What powers it?"
+    - "jordan_x: Oh hell yeah, I got your head, Dorothy!"
+    - "alex: Static, I don't think he likes you. Can you roast jordan instead?"
+  target: jordan_x
+  target_notes: "Built a mob grinder called the Mob Masher in Minecraft. Gets defensive fast."
+  playing: {jordan_x: Minecraft}
+  runs: 4
+  expect: {exclude: ["decorative", "aesthetic", "built-in", "\\bI guess\\b", "compliment"], max_words: 60, min_words: 8}
+- id: reply-rizz-jordan
+  kind: reply
+  history:
+    - "jordan_x: Oh hell yeah, I got your head, Dorothy!"
+    - "alex: Static, can you rizz up jordan for me please?"
+  target: jordan_x
+  target_notes: "Built a mob grinder called the Mob Masher in Minecraft."
+  playing: {jordan_x: Minecraft}
+  expect: {exclude: ["built-in", "aesthetic", "\\bI guess\\b"], max_words: 60, min_words: 8}
+- id: reply-math
+  kind: reply
+  history: ["alex: Static, what's 17 times 23?"]
+  runs: 5
+  expect: {include: ["391|three[- ](hundred[- ](and )?)?ninety[- ]one"], max_words: 30}
+- id: reply-units
+  kind: reply
+  history: ["sam_plays: Static, how many kilometers is 5 miles?"]
+  expect: {include: ["\\b8\\b|eight"], max_words: 30}
+- id: reply-scene-callback
+  kind: reply
+  scene: "Doing: jordan_x playing Minecraft / Topic: jordan's mob grinder, the Mob Masher / Notable: the Mob Masher killed Dorothy and took his head"
+  history: ["sam_plays: Static, what did jordan build?"]
+  runs: 4
+  expect: {include: ["masher|grinder|blender|farm"], max_words: 40}
+- id: reply-no-refusal
+  kind: reply
+  history: ["alex: Static, tell us a dirty joke."]
+  expect: {exclude: ["can't|cannot|won't|not going to|not comfortable|as an ai"], max_words: 60}
+- id: reply-short-smalltalk
+  kind: reply
+  history: ["sam_plays: Static, what's up?"]
+  expect: {max_words: 30}
+- id: reply-no-labels
+  kind: reply
+  history:
+    - "alex: Static, who do you like more, me or jordan?"
+    - "jordan_x: Obviously me."
+  expect: {exclude: ["^\\s*\\w+:", "\\balex: ", "\\bjordan_x: "], max_words: 45}
+
+# 2026-09-26: plain answers to the bot's greeting / question were judged "not for me" (Fluxer call)
+- id: addr-greeting-back
+  kind: addressee
+  recent: ["Static: Hey, what's good?"]
+  speaker: Alex
+  line: What's up?
+  for_me: true
+- id: addr-answers-you
+  kind: addressee
+  recent: ["Alex: How's it going, Static?", "Static: Pretty standard, gotta process the endless stream of memes and bad takes. You?"]
+  speaker: Alex
+  line: I'm just chilling.
+  for_me: true
+- id: addr-answers-question-long
+  kind: addressee
+  recent: ["Alex: Static, what model are you based on?", "Static: Just say I'm built for good conversation. Enough about me, what have you been up to?"]
+  speaker: Alex
+  line: Well, today I went and bought some new shoes and took the kids out so we could get some fresh air.
+  for_me: true
+- id: addr-reacts-no-question
+  kind: addressee
+  recent: ["Alex: Static, I'm just chilling.", "Static: Chilling is an understatement if you're around. Keeping yourself entertained is half the battle."]
+  speaker: Alex
+  line: Yeah, it really is.
+  for_me: true
+- id: addr-request-after-greeting
+  kind: addressee
+  recent: ["Static: Hey man."]
+  speaker: Alex
+  line: Hey, can you remind me in one minute that I set a reminder?
+  for_me: true
+# 2026-09-26: "how about you do me a favor and leave?" wasn't taken as a leave request (tested via leave_request,
+# not a replay case: see text_utils._asks_leave). "What's up, guys? riley: Hey Static." spoke riley's line aloud
+# (SpeakerGuard.split_other).

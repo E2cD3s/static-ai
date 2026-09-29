@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Static Help</title>
+  <meta name="description" content="How to talk to Static, the voice bot on Discord and Fluxer, and how it works">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📡</text></svg>">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="help-page">
+  <header class="strip">
+    <div class="strip-in">
+      <img id="avatar" alt="" class="hidden">
+      <div class="who">
+        <div class="who-name"><span data-fill="name">Static</span> <span class="lamp idle">HELP</span></div>
+      </div>
+      <nav class="help-nav" aria-label="Pages">
+        <a href="/status">Status</a>
+        <a href="/help" aria-current="page">Help</a>
+        <a href="/admin">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- The hero: how talking to it actually goes. -->
+    <section class="h-hero">
+      <div class="h-intro">
+        <h1 class="h-title">Talk to <span data-fill="name">Static</span></h1>
+        <p class="h-lede"><span data-fill="name">Static</span> is an AI regular in this server's voice channels and chats.
+          Talk to it out loud like anyone else in the call, or message it. It has opinions, looks things up, sets
+          reminders and clips funny moments, and it all runs on its owner's own PC.<span data-if="fluxer"> It's on
+          <span data-if="discord">Discord and on </span>our own Fluxer server<span data-if="discord"> too</span>
+          - same personality, <a href="#platforms">a few differences</a>.</span></p>
+        <div class="plat-tabs hidden" id="plat-tabs" role="tablist" aria-label="Which app are you using?">
+          <span class="plat-tabs-q">Using</span>
+          <button role="tab" data-p="discord" aria-selected="true">Discord</button>
+          <button role="tab" data-p="fluxer" aria-selected="false">Fluxer</button>
+        </div>
+        <ol class="h-steps">
+          <li>Join a voice channel and type <code class="cmd" data-cmd="join">/join</code>.</li>
+          <li data-if="wake">Start with its name: <q>Static, what should I play tonight?</q></li>
+          <li data-if="always">Just talk. It answers everyone in the channel.</li>
+          <li>Keep talking. Talk over it to cut it off.</li>
+        </ol>
+      </div>
+
+      <figure class="call" aria-label="Example conversation">
+        <div class="call-line"><span class="who-h">you</span>
+          <p>Hey <span data-fill="wake">Static</span>, anything new in Endfield?</p>
+          <span class="note" data-if="wake">Say its name to start</span></div>
+        <div class="call-line bot"><span class="who-b" data-fill="name">Static</span>
+          <p><span class="filler" data-if="search">One sec, checking. </span>Yeah, the Dreamscape update dropped on the 2nd.
+            New snowy map and a new operator, Purrchena.</p>
+          <span class="note" data-if="search">Looks up anything current</span></div>
+        <div class="call-line"><span class="who-h">you</span>
+          <p>Wait, who's Purrchena?</p>
+          <span class="note" data-if="wake">No name needed for follow-ups</span></div>
+        <div class="call-line bot"><span class="who-b" data-fill="name">Static</span>
+          <p>The new operator from that update. Let me guess, you're already saving pulls for her.</p></div>
+        <div class="call-line"><span class="who-h">you</span>
+          <p>Obviously. Alright, you can leave now.</p></div>
+        <div class="call-line bot"><span class="who-b" data-fill="name">Static</span>
+          <p>Later, gacha addict.</p>
+          <span class="note" data-if="leave_on_request">Says bye and leaves the call</span></div>
+      </figure>
+    </section>
+
+    <div class="h-body">
+      <nav class="h-toc" aria-label="On this page">
+        <a href="#voice">Voice</a>
+        <a href="#text">Text chat</a>
+        <a href="#ask" data-if="extras">Things to ask for</a>
+        <a href="#commands">Commands</a>
+        <a href="#platforms" data-if="fluxer">Discord &amp; Fluxer</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#how">How it works</a>
+        <a href="#faq">Troubleshooting</a>
+      </nav>
+
+      <article class="h-doc">
+        <section id="voice">
+          <h2>Talking in voice</h2>
+          <p data-if="wake">Outside a conversation it only answers when it hears its name, anywhere in the sentence:
+            <q>Static, what do you think?</q> works, and so does <q>what do you think, Static?</q>
+            Once it has answered you, you have about <b data-fill="followup">20 seconds</b> to reply without the name. That
+            window adjusts itself to how your server talks.</p>
+          <p data-if="always">It answers everything said in the channel, so there's no need to use its name.</p>
+          <p data-if="speaker">It sticks with the person it's talking to. Others chatting nearby won't set it off. Anyone
+            can join in by saying its name, and then they're part of the conversation too.</p>
+          <p data-if="wake_extra" class="quiet">It also answers to <span data-fill="wake_extra"></span>, in case the
+            speech-to-text mishears its name.</p>
+
+          <h3>Taking turns</h3>
+          <p>It waits for you to finish, and gives you a moment longer if you trail off mid-thought. When several people
+            talk at once, it waits until everyone's done and answers them together.
+            <span data-if="barge_in">To cut it off, just talk over it: it turns itself down straight away, and stops once
+            you've been talking for about <b data-fill="barge">a second</b>. A laugh or a quick "yeah" won't stop it.</span>
+            <span data-if="barge_speaker">Only the person it's answering (or already talking with) can stop it that way;
+            anyone else talking just turns it down.</span>
+            <code class="cmd" data-cmd="stop">/stop</code> silences it instantly.</p>
+          <p data-if="resume">Cut it off by accident? Say <q>go on</q>, <q>keep going</q> or <q>what were you saying?</q>
+            within <span data-fill="resume">a minute and a half</span> and it picks up where it stopped, without starting
+            over.</p>
+
+          <h3>What it knows</h3>
+          <p>It knows who's in the call and recognises people by their account, not their nickname.
+            <span data-if="activities" data-platform="discord">It can see what you're up to on Discord, like the game you're playing or your music,
+            and brings it up now and then.</span>
+            <span data-if="search">For news, scores, prices, releases or anything recent, it searches the web first and
+            answers from what it finds.</span>
+            <span data-if="profiles">Over time it keeps short notes on people, so it remembers what you're into.</span>
+            <span data-if="lore">It also remembers the group's big moments and inside jokes, and brings them back up
+            when they fit.</span>
+            <span data-if="calc">Maths, unit conversions and "what time is it in Tokyo?" are worked out exactly, not
+            guessed.</span></p>
+          <p>You can ask about anyone in the server, even if they're not in the call: <q>Static, what roles does Casey
+            have?</q> or <q>Static, list my roles.</q> It answers from the server itself, not the web, and says so if it
+            can't find someone.</p>
+
+          <h3 data-if="check_in">Looking out for people</h3>
+          <p data-if="check_in">If nobody's talking to it but someone sounds genuinely heated or down for a while, it may
+            chime in once to check on them, sincerely or with a joke, taking into account what they're doing (a rough match
+            or a bad pull). It keeps this rare: at most once every <span data-fill="check_cooldown">10 minutes</span>,
+            and it never lectures.</p>
+
+          <h3>Sending it away</h3>
+          <p><span data-if="leave_on_request">Say <q>Static, you can leave now</q> or use</span><span data-if="!leave_on_request">Use</span>
+            <code class="cmd" data-cmd="leave">/leave</code>.<span data-if="auto_leave_when_empty"> It also leaves on its own when everyone else has gone.</span>
+            <span data-if="boomerang">Asking works. Force-disconnecting it doesn't go unanswered, though: it comes straight
+            back to say a few words to whoever kicked it, then leaves on its own terms.</span>
+            After a long quiet spell it forgets the conversation, so the next call starts fresh.</p>
+        </section>
+
+        <section id="text">
+          <h2>Text chat</h2>
+          <p>Same personality, in writing. It doesn't answer every message, only when you call it:</p>
+          <ul class="h-list" id="text-when"></ul>
+          <p data-if="context">When you call it in, it reads the last <span data-fill="context">10</span> messages first, so
+            it knows what you're talking about.</p>
+          <p data-if="vision">It can see images. Post one (or reply to one) and ask about it. It can also look at
+            profile pictures: <q>Static, what do you think of my pfp?</q></p>
+          <p>@mention people in your message and it knows who you mean. Questions about members and roles work here
+            too.</p>
+          <p class="quiet">Its messages never ping anyone, even if someone tries to make it.</p>
+        </section>
+
+        <section id="ask" data-if="extras">
+          <h2>Things to ask for</h2>
+          <p>Ask out loud or in text, in your own words. These all work:</p>
+          <dl class="h-asks">
+            <dt data-if="reminders">Reminders</dt>
+            <dd data-if="reminders">
+              <q>Static, remind me in 20 minutes to take the pizza out</q>
+              <q>Static, remind everyone at 9 we're raiding</q>
+              <q>Static, cancel the pizza reminder</q>
+              <p>Your own reminders arrive as a DM. Group ones ping everyone in the channel. If you're in voice
+                when a reminder is due, it says it out loud too.</p>
+            </dd>
+            <dt data-if="reminders">Polls</dt>
+            <dd data-if="reminders">
+              <q>Static, make a poll: pizza or tacos</q>
+              <p><span data-platform="discord">It creates a real Discord poll. </span><span data-platform="fluxer">It
+                posts the choices with number reactions (1️⃣ 2️⃣ …): vote by clicking one. </span>It closes the poll on
+                time, posts the result and announces the winner in voice.
+                <span data-platform="fluxer">Or type it: <code class="cmd-fx">!poll Pizza tonight? | yes, no | 10 minutes</code></span></p>
+            </dd>
+            <dt>Roasts</dt>
+            <dd>
+              <q>Static, roast jordan</q>
+              <q>Static, talk shit about him</q>
+              <q>Static, roast me</q>
+              <p>It goes after whoever you name (or "him"/"her": the last person who spoke), using what it knows about
+                them, what they're playing and what they just said. All in good fun.</p>
+            </dd>
+            <dt data-if="clips">Clips</dt>
+            <dd data-if="clips">
+              <q>Clip that!</q>
+              <q>Static, clip the last 10 seconds</q>
+              <p>It saves the last <span data-fill="clip_default">30 seconds</span> of the call (up to
+                <span data-fill="clip_buffer">a minute</span>) as an MP3 in the voice channel's chat. If two people
+                ask at once, you get one clip, not two.</p>
+            </dd>
+            <dt data-if="quotes">Quote book</dt>
+            <dd data-if="quotes">
+              <q>Static, quote that</q>
+              <q>Quote what riley said</q>
+              <q>Static, give us a random quote</q>
+              <p>Someone said something legendary? "Quote that" saves the last line someone else said (or "quote me"
+                for your own) to the server's quote book and posts it in the chat.
+                <span data-platform="discord">Pull one up any time with <code>/quote</code>, or search it:
+                <code>/quote search:mob masher</code>. To save a text message, right-click it, then Apps, then
+                <b>Save as quote</b>.</span>
+                <span data-platform="fluxer">Pull one up any time with <code class="cmd-fx">!quote</code>, or search it:
+                <code class="cmd-fx">!quote mob masher</code>. To save a text message, reply to it with
+                <code class="cmd-fx">!quote</code>.</span></p>
+            </dd>
+            <dt data-if="fun">Game night</dt>
+            <dd data-if="fun">
+              <q>Static, flip a coin</q>
+              <q>Static, roll 2d6</q>
+              <q>Static, pick someone</q>
+              <q>Static, split us into two teams</q>
+              <q>Static, pick between tacos, pizza or sushi</q>
+              <p>Coins, dice (<code>d20</code>, <code>2d6+3</code>), a random number, picking a person or an option,
+                and splitting everyone in the call into teams. The randomness is real (done by the computer, not
+                made up by the AI), so nobody can accuse it of cheating.</p>
+            </dd>
+            <dt data-if="weather">Weather</dt>
+            <dd data-if="weather">
+              <q>Static, what's the weather in Denver tomorrow?</q>
+              <q>Static, is it gonna rain in Chicago today?</q>
+              <p>Live forecasts for anywhere, today, tonight, tomorrow or later this week.
+                <span data-if="weather_home">Leave out the place and it uses the local weather.</span>
+                <span data-if="!weather_home">Say which city.</span></p>
+            </dd>
+          </dl>
+        </section>
+
+        <section id="commands">
+          <h2>Commands</h2>
+          <p data-platform="discord">Type <code>/</code> in any channel to see these. Most replies are only visible to you.</p>
+          <p data-platform="fluxer">Fluxer doesn't have slash commands for bots yet, so type these as messages in any
+            text channel. Answers about you (your profile, your reminders) come by DM.</p>
+          <div id="cmds"><p class="quiet">Loading commands…</p></div>
+        </section>
+
+        <section id="platforms" data-if="fluxer">
+          <h2>Discord and Fluxer</h2>
+          <p><span data-fill="name">Static</span> is on <span data-if="discord">Discord and on </span>our own Fluxer
+            server<span data-if="fluxer_host"> (<span data-fill="fluxer_host"></span>)</span>, with the same personality,
+            voice and features. Use the <b>Discord / Fluxer</b> switch at the top of this page to see the commands for
+            the one you're on.</p>
+          <ul class="h-list">
+            <li>On Fluxer, commands start with <code data-fill="fx_prefix">!</code> instead of <code>/</code>, private
+              answers come by DM, and polls are reaction polls.</li>
+            <li>It keeps a separate memory on each: its notes on people, server memories, quotes and reminders on Fluxer
+              aren't mixed with Discord's<span data-if="links">, unless you link your accounts</span>.</li>
+          </ul>
+          <p data-if="links"><b>Linking your accounts (optional).</b> Use <code>/link</code> on Discord to get a code, then
+            type <code class="cmd-fx">!link 123456</code> on Fluxer within 10 minutes (or start with
+            <code class="cmd-fx">!link</code> on Fluxer and enter the code with <code>/link</code>). After that it knows
+            both accounts are you and shares what it remembers about you between them - nothing else.
+            <code>/unlink</code> or <code class="cmd-fx">!unlink</code> undoes it, and so does <code>/forget</code>.</p>
+        </section>
+
+        <section id="privacy">
+          <h2>Privacy and memory</h2>
+          <div class="h-compare">
+            <div>
+              <h3>It keeps</h3>
+              <ul class="h-list" id="keeps"></ul>
+            </div>
+            <div>
+              <h3>It doesn't keep</h3>
+              <ul class="h-list" id="not-keeps"></ul>
+            </div>
+          </div>
+          <p data-if="profiles"><code class="cmd" data-cmd="profile">/profile</code> shows what it has written down about you, <code class="cmd" data-cmd="forget">/forget</code>
+            deletes it, and <code class="cmd" data-cmd="profiling">/profiling</code> stops it taking notes on you.
+            Server admins can wipe a channel's current
+            conversation with <code class="cmd" data-cmd="reset">/reset</code>.</p>
+          <p class="quiet">The owner can read text logs of what it heard and said, for fixing problems.</p>
+        </section>
+
+        <section id="how">
+          <h2>How it works</h2>
+          <p>Every spoken reply goes through four stages, all on one home PC with one graphics card.</p>
+          <div class="pipe" aria-hidden="true"><span class="s-hear"></span><span class="s-look"></span><span class="s-think"></span><span class="s-speak"></span></div>
+          <ol class="h-stages" id="stages"></ol>
+          <p>It feels quick because it starts early. During your pauses it already transcribes what you said and starts
+            on a reply, then plays it only once you've actually finished. It speaks the first sentence while the rest is
+            still being written.</p>
+          <p data-if="learns">It also learns the room. <span data-if="tuning">If people keep cutting it off, it keeps its
+            replies shorter.</span> <span data-if="mood">It picks up on mood from your words and tone of voice, and learns
+            which way of responding goes over best with your crowd.</span></p>
+          <p class="quiet">Live speed and response times are on the <a href="/status">status page</a>.</p>
+        </section>
+
+        <section id="faq">
+          <h2>Troubleshooting</h2>
+          <details><summary>It isn't answering me in voice</summary>
+            <p>Check it's in <em>your</em> voice channel (<code class="cmd" data-cmd="join">/join</code> from where you are).
+              <span data-if="wake">Say its name: it only answers outside a conversation when called.</span>
+              <span data-if="speaker">If it's talking with someone else, say its name to jump in.</span>
+              Also check you're not muted and your mic works for other people.</p></details>
+          <details data-if="barge_in"><summary>It stopped talking, or didn't stop, when someone spoke</summary>
+            <p>It only stops once someone has been talking over it for about <span data-fill="barge">a second</span>, so
+              laughs and quick reactions don't cut it off.<span data-if="barge_speaker"> Only the person it's answering can
+              stop it; anyone else just turns it down, so a side conversation won't interrupt it.</span><span data-if="resume">
+              If it stopped when it shouldn't have, say <q>go on</q>.</span></p></details>
+          <details><summary>It misheard me</summary>
+            <p>Names, game terms and slang trip up speech-to-text the most. Say it again more clearly, or type the
+              tricky word. Names it has just said are easier for it to catch.</p></details>
+          <details><summary>I can't DM it, or it can't DM me</summary>
+            <p><span data-platform="discord">This is usually your Discord privacy settings. Open the server menu, go to
+              Privacy Settings and turn on Direct Messages.</span><span data-platform="fluxer">Check Fluxer's privacy
+              settings allow direct messages from server members.</span> Also check you haven't blocked it. If a reminder
+              can't reach you by DM, it pings you in the channel instead.</p></details>
+          <details data-if="clips"><summary>"Clip that" doesn't post anything</summary>
+            <p data-platform="discord">It posts clips in the voice channel's chat, so it needs permission to send messages
+              and attach files there. Temporary channels often don't give bots that, so ask a server admin. It tells you out
+              loud when Discord refuses.</p>
+            <p data-platform="fluxer">Fluxer voice channels have no chat, so clips go to the text channel where you typed
+              <code class="cmd-fx">!join</code> (or #general). It needs permission to send messages and attach files
+              there.</p></details>
+          <details><summary>It said something wrong</summary>
+            <p>It's a small AI model on a home PC and it can get facts wrong, especially from memory.
+              <span data-if="search">For anything current, ask it to look it up: it then answers only from what it finds.</span></p></details>
+          <details><summary>A reply took longer than usual</summary>
+            <p>That's usually a web search (you'll hear "let me look that up"), or several people talking at once so it
+              waited for everyone to finish.</p></details>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="wrap h-foot">
+    <span class="h-foot-name" data-fill="name">Static</span>
+    <a href="/status">Status</a>
+    <a href="/help">Help</a>
+    <a href="/terms">Terms of service</a>
+    <a href="/privacy">Privacy policy</a>
+    <p class="h-foot-credit">Built with <span class="heart" aria-label="love">♥</span> by logicalgamer and Claude. Hosted on a self&#8209;hosted Linux server.</p>
+  </footer>
+
+  <script src="/static/common.js"></script>
+  <script src="/static/help.js"></script>
+</body>
+</html>

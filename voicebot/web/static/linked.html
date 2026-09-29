@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{name}} Linked Roles</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📡</text></svg>">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="help-page">
+  <header class="strip">
+    <div class="strip-in">
+      <div class="who"><div class="who-name">{{name}} <span class="lamp idle">LINKED ROLES</span></div></div>
+      <nav class="help-nav" aria-label="Pages">
+        <a href="/status">Status</a>
+        <a href="/help">Help</a>
+        <a href="/admin">Admin</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap legal">
+    <article class="h-doc linked {{state}}">
+      <h1 class="legal-title">{{title}}</h1>
+      {{body}}
+    </article>
+  </main>
+
+  <footer class="wrap h-foot">
+    <span class="h-foot-name">{{name}}</span>
+    <a href="/status">Status</a>
+    <a href="/help">Help</a>
+    <a href="/terms">Terms of service</a>
+    <a href="/privacy">Privacy policy</a>
+    <p class="h-foot-credit">Built with <span class="heart" aria-label="love">♥</span> by logicalgamer and Claude. Hosted on a self&#8209;hosted Linux server.</p>
+  </footer>
+</body>
+</html>

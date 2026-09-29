@@ -1,0 +1,45 @@
+# Discord + voice receive.
+# Since March 2026 Discord end-to-end encrypts all voice calls (DAVE). The PyPI discord-ext-voice-recv
+# never decrypts incoming audio (the bot just hears noise), so we use zacker150's fork with DAVE
+# receive support, pinned to a known commit together with the discord.py fork it requires.
+discord.py[voice] @ git+https://github.com/zacker150/discord.py@44287ebed119db388542691da2ce30c50a2081df
+discord-ext-voice-recv @ git+https://github.com/zacker150/discord-ext-voice-recv@dcf543a1618d6212f10db5d5dbb7a45f76a955e9
+davey>=0.1.6,<0.2
+
+# LLM / HTTP
+openai>=1.40
+httpx
+PyYAML
+pillow      # image resizing/conversion for vision
+ddgs        # keyless DuckDuckGo search (web search fallback)
+dateparser  # reminder times ("in 20 minutes", "tomorrow at 9am")
+psutil      # /status: CPU, RAM, temperatures
+lameenc     # voice clips -> MP3
+
+# Audio
+numpy
+soxr
+webrtcvad-wheels
+setuptools  # webrtcvad imports pkg_resources on some versions
+
+# STT (local GPU)
+faster-whisper>=1.1.0
+
+# CUDA 12 / cuDNN 9 runtime libs, shared by faster-whisper and onnxruntime-gpu
+nvidia-cublas-cu12; platform_system != "Darwin"
+nvidia-cudnn-cu12>=9,<10; platform_system != "Darwin"
+nvidia-cuda-runtime-cu12; platform_system != "Darwin"
+nvidia-cufft-cu12; platform_system != "Darwin"
+nvidia-curand-cu12; platform_system != "Darwin"
+
+# TTS (local). kokoro-onnx pulls in CPU onnxruntime; install.sh / setup.bat then swap it
+# for onnxruntime-gpu (the two can't coexist - they install into the same package folder).
+kokoro-onnx>=0.4.0
+# piper-tts          # uncomment if you want tts.backend: piper
+
+# Admin dashboard: edits config.yaml without losing its comments
+ruamel.yaml>=0.18
+
+# Fluxer (platform.mode: fluxer/both): gateway/REST wrapper + LiveKit for voice
+fluxer.py[voice]==0.4.2
+livekit==1.1.20

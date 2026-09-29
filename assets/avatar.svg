@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="46%" r="70%">
+      <stop offset="0" stop-color="#2b1150"/>
+      <stop offset="0.55" stop-color="#110725"/>
+      <stop offset="1" stop-color="#05030b"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00e5ff"/>
+      <stop offset="1" stop-color="#ff2bd6"/>
+    </linearGradient>
+    <radialGradient id="vignette" cx="50%" cy="50%" r="72%">
+      <stop offset="0.6" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.75"/>
+    </radialGradient>
+
+    <!-- TV static -->
+    <filter id="static" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="7" stitchTiles="stitch"/>
+      <feColorMatrix type="matrix" values="0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0 0 0 0 0.3"/>
+    </filter>
+    <pattern id="scan" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="3" fill="#000" opacity="0.35"/>
+    </pattern>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="16" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softglow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- The face: one open eye, one winking eye, and an equalizer-bar grin -->
+    <g id="face" transform="translate(0,-22)">
+      <rect x="338" y="352" width="112" height="136" rx="42" fill="currentColor"/>
+      <path d="M 572 440 Q 631 366 690 440" fill="none" stroke="currentColor" stroke-width="36" stroke-linecap="round"/>
+      <rect x="300" y="587"   width="24" height="26"  rx="12" fill="currentColor"/>
+      <rect x="340" y="594.6" width="24" height="54"  rx="12" fill="currentColor"/>
+      <rect x="380" y="594.4" width="24" height="88"  rx="12" fill="currentColor"/>
+      <rect x="420" y="618.4" width="24" height="64"  rx="12" fill="currentColor"/>
+      <rect x="460" y="598.6" width="24" height="118" rx="12" fill="currentColor"/>
+      <rect x="500" y="590"   width="24" height="140" rx="12" fill="currentColor"/>
+      <rect x="540" y="605.6" width="24" height="104" rx="12" fill="currentColor"/>
+      <rect x="580" y="584.4" width="24" height="132" rx="12" fill="currentColor"/>
+      <rect x="620" y="600.4" width="24" height="76"  rx="12" fill="currentColor"/>
+      <rect x="660" y="596.6" width="24" height="50"  rx="12" fill="currentColor"/>
+      <rect x="700" y="588"   width="24" height="24"  rx="12" fill="currentColor"/>
+    </g>
+
+    <clipPath id="slice1"><rect x="0" y="404" width="1024" height="20"/></clipPath>
+    <clipPath id="slice2"><rect x="0" y="652" width="1024" height="16"/></clipPath>
+  </defs>
+
+  <!-- background -->
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <rect width="1024" height="1024" filter="url(#static)"/>
+
+  <!-- neon ring -->
+  <circle cx="512" cy="512" r="452" fill="none" stroke="url(#ring)" stroke-width="14" opacity="0.9" filter="url(#softglow)"/>
+  <circle cx="512" cy="512" r="418" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.08"/>
+
+  <!-- chromatic aberration copies -->
+  <use href="#face" xlink:href="#face" transform="translate(-14,0)" style="color:#00e5ff; mix-blend-mode:screen" opacity="0.85"/>
+  <use href="#face" xlink:href="#face" transform="translate(14,0)" style="color:#ff2bd6; mix-blend-mode:screen" opacity="0.85"/>
+  <!-- main face -->
+  <use href="#face" xlink:href="#face" style="color:#effcff" filter="url(#glow)"/>
+
+  <!-- glitch slices: bands of the face knocked sideways -->
+  <g clip-path="url(#slice1)"><use href="#face" xlink:href="#face" transform="translate(30,0)" style="color:#ff2bd6"/></g>
+  <g clip-path="url(#slice2)"><use href="#face" xlink:href="#face" transform="translate(-34,0)" style="color:#00e5ff"/></g>
+
+  <!-- glitch artifacts -->
+  <rect x="258" y="458" width="176" height="7" fill="#00e5ff" opacity="0.85"/>
+  <rect x="604" y="724" width="150" height="6" fill="#ff2bd6" opacity="0.85"/>
+  <rect x="186" y="566" width="74" height="4" fill="#ffffff" opacity="0.4"/>
+  <rect x="772" y="336" width="62" height="4" fill="#ff2bd6" opacity="0.6"/>
+  <rect x="742" y="512" width="40" height="3" fill="#00e5ff" opacity="0.5"/>
+
+  <!-- CRT scanlines + vignette -->
+  <rect width="1024" height="1024" fill="url(#scan)" opacity="0.5"/>
+  <rect width="1024" height="1024" fill="url(#vignette)"/>
+</svg>

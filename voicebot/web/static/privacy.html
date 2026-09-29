@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{name}} Privacy Policy</title>
+  <meta name="description" content="What the {{name}} Discord bot collects, why, and how to delete it">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📡</text></svg>">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="help-page">
+  <header class="strip">
+    <div class="strip-in">
+      <div class="who"><div class="who-name">{{name}} <span class="lamp idle">LEGAL</span></div></div>
+      <nav class="help-nav" aria-label="Pages">
+        <a href="/status">Status</a>
+        <a href="/help">Help</a>
+        <a href="/admin">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap legal">
+    <article class="h-doc">
+      <h1 class="legal-title">Privacy policy</h1>
+      <p class="legal-meta">Effective {{updated}}. Applies to the {{name}} bot on Discord and on the owner's Fluxer server, and to its website, {{site}}.</p>
+
+      <p class="legal-summary">The short version: {{name}} only keeps what it needs to work and to get better. Nothing
+        is sold, rented or shared for advertising. Speech, text and images are processed by AI models running on the
+        owner's own computer, not by any AI company. You can see and delete what it knows about you at any time with
+        <code>/profile</code> and <code>/forget</code>.</p>
+
+      <section>
+        <h2>Who runs it</h2>
+        <p>{{name}} is a free, non-commercial bot run by an individual (the "owner", "we"). It runs on the owner's own
+          computer. Questions about this policy go to {{contact}}.</p>
+      </section>
+
+      <section>
+        <h2>What it collects</h2>
+        <h3>Your account</h3>
+        <p>Your user ID, username, display name and roles in servers the bot is in, when it first and last saw you, and
+          how many times you've talked to it. This lets it recognise people and address them properly. It can also see a
+          server's member list (names and roles) to answer questions like "what roles does this person have?"; that list
+          isn't saved.</p>
+        <p>{{name}} runs on Discord and on the owner's own Fluxer server (a self-hosted chat app, like Discord). It keeps
+          separate records for each: what it knows about you on one isn't used on the other, unless you link your
+          accounts yourself (see below). On Fluxer, the same commands start with <code>!</code> instead of
+          <code>/</code> (<code>!profile</code>, <code>!forget</code>, <code>!profiling off</code>).</p>
+
+        <h3>Voice</h3>
+        <p>When the bot is in a voice channel it listens to the people in it and turns speech into text, live, so it can
+          answer. Audio is not saved. The last {{clip_seconds}} seconds of the call are held in memory so anyone can ask for
+          a clip, and are constantly overwritten. A clip is only saved when someone asks for one, and it is then posted
+          as a message in the server where everyone in that chat can see it.</p>
+        <p>To tell whether someone sounds excited or annoyed, it keeps a running average of each person's usual loudness
+          and speaking pace. These are just numbers, not recordings. It uses them, together with the words, to pick how to
+          answer, and occasionally to check on someone who sounds upset.</p>
+
+        <h3>Messages and images</h3>
+        <p>When you message the bot or call it into a channel, it reads your message and up to {{context}} earlier
+          messages for context. It can look at images in those messages and at profile pictures. The conversation is kept
+          in memory while the chat is going, not in a database, and is dropped after {{fresh}} minutes of quiet, when a
+          server admin uses <code>/reset</code>, or when the bot restarts. It keeps a short text description of your profile picture so
+          it doesn't need to look at it again.</p>
+
+        <h3>Notes about you</h3>
+        <p>From your conversations, the AI writes and updates short notes about you (for example interests, games you
+          play, running jokes) so it remembers you between chats. What you've said waits in a short queue until it has
+          been summarised into those notes, then the queue is deleted. You can turn this off with <code>/profiling</code>,
+          which also deletes the notes.</p>
+
+        <h3>Server memories</h3>
+        <p>Every so often the AI reads back over recent chat in a server and writes down up to three moments worth
+          remembering as that group's shared history (for example "jordan built a mob grinder called the Mob Masher"), so
+          it can bring them up in later chats. Each is one line of text, with a list of the people it's about. The lines
+          it read are only held in memory until then. <code>/forget</code> and <code>/profiling</code> delete every
+          memory you're part of, and the bot stops keeping your lines.</p>
+
+        <h3>What you're doing on Discord</h3>
+        <p>The bot can see what Discord shows about you, such as the game you're playing, music you're listening to or
+          your custom status. It uses this live as conversation context and doesn't store it separately.</p>
+
+        <h3>Reminders and polls</h3>
+        <p>The text, time, channel and people involved, until the reminder is delivered or the poll closes.</p>
+
+        <h3>Quotes</h3>
+        <p>When someone asks {{name}} to "quote that", or saves a message as a quote, it keeps that one line in the
+          server's quote book: the words, who said them, when, and who saved it. Quotes are shared with the server on
+          purpose (anyone there can pull one up), so <code>/forget</code> doesn't remove them; a server admin, whoever
+          saved it, or the owner can delete a quote at any time.</p>
+
+        <h3>Linked accounts</h3>
+        <p>Only if you choose to, you can link your Discord and Fluxer accounts with <code>/link</code> and
+          <code>!link</code>. It then stores which two accounts belong together (their IDs and names), and each side can
+          use the notes the other side keeps about you. <code>/unlink</code>, <code>!unlink</code> or
+          <code>/forget</code> removes the link straight away.</p>
+
+        <h3>Linked roles</h3>
+        <p>If you connect {{name}} to your account through Discord's Linked Roles, the bot reads your user ID and username
+          once to look up your stats, and sends those stats (whether you've talked to it, how many times, and since when)
+          to Discord so servers can give out roles. The access token Discord provides for this is used once and not
+          stored. You can disconnect at any time in Discord's settings under Connections.</p>
+
+        <h3>Logs</h3>
+        <p>The owner's computer keeps system logs so problems can be fixed. They include the text of what the bot heard and
+          said, errors, and the IP addresses of people signing in to the admin dashboard. Only the owner can read them, and
+          they are deleted automatically as newer logs replace them, normally within a few weeks.</p>
+
+        <h3>The website</h3>
+        <p>The public pages (status, help and these policies) don't use tracking or analytics and don't set cookies. The
+          admin dashboard sets a sign-in cookie for the owner and administrators only.</p>
+      </section>
+
+      <section>
+        <h2>How it's used</h2>
+        <p>Only to run the bot and to make it better: answering you, remembering context, delivering reminders, and
+          tuning things like reply length and how it responds to the mood of a conversation. The owner may read logs and
+          stored notes to fix bugs and improve the bot. We don't sell, rent or trade your data, don't use it for
+          advertising, and don't use it to train AI models for anyone else.</p>
+      </section>
+
+      <section>
+        <h2>Who else sees it</h2>
+        <ul class="h-list">
+          <li><b>Discord.</b> Everything you send the bot on Discord, and everything it sends back, goes through Discord
+            and is covered by <a href="https://discord.com/privacy" rel="noopener">Discord's privacy policy</a>.</li>
+          <li><b>Fluxer.</b> On Fluxer, messages and voice go through the owner's own Fluxer server (including its voice
+            server), not a company's.</li>
+          <li><b>People in your server.</b> The bot's replies, clips and polls are posted where others can see them, like
+            any other message.</li>
+          <li><b>Search engines.</b> When the bot looks something up, the search words (never your voice, name or account)
+            are sent to a search service run by the owner, which may pass them on to public search engines, and in some cases
+            to DuckDuckGo.</li>
+          <li><b>Weather service.</b> When you ask about the weather, only the place name (for example "Denver") is sent
+            to <a href="https://open-meteo.com" rel="noopener">Open-Meteo</a> to get the forecast - never who asked.</li>
+          <li><b>Nobody else</b>, unless the law requires it.</li>
+        </ul>
+        <p>No AI company receives your data: speech recognition, the language model and the voice all run on the owner's
+          computer.</p>
+      </section>
+
+      <section>
+        <h2>How long it's kept</h2>
+        <table class="legal-table">
+          <tr><th>Data</th><th>Kept</th></tr>
+          <tr><td>Call audio</td><td>Not stored. The last {{clip_seconds}} seconds are held in memory only</td></tr>
+          <tr><td>Conversations</td><td>In memory until {{fresh}} minutes of quiet, <code>/reset</code> or a restart</td></tr>
+          <tr><td>Account details, notes, profile-picture description</td><td>Until you use <code>/forget</code> or <code>/profiling</code>, or ask the owner</td></tr>
+          <tr><td>Server memories (moments from group chats)</td><td>Until you use <code>/forget</code> or <code>/profiling</code>, or ask the owner</td></tr>
+          <tr><td>Voice loudness and pace averages</td><td>Until you ask the owner to delete them</td></tr>
+          <tr><td>Reminders and polls</td><td>Until delivered or closed</td></tr>
+          <tr><td>Quotes</td><td>Until a server admin, whoever saved it, or the owner deletes it</td></tr>
+          <tr><td>Account link (only if you made one)</td><td>Until you unlink, use <code>/forget</code>, or ask the owner</td></tr>
+          <tr><td>System logs</td><td>Deleted automatically, normally within a few weeks</td></tr>
+          <tr><td>Clips</td><td>Posted to Discord; they stay until someone deletes the message</td></tr>
+        </table>
+      </section>
+
+      <section>
+        <h2>Your choices</h2>
+        <ul class="h-list">
+          <li><code>/profile</code> shows what the bot has stored about you.</li>
+          <li><code>/forget</code> deletes it.</li>
+          <li><code>/profiling</code> stops it keeping notes about you (and deletes the existing ones).</li>
+          <li><code>/unlink</code> removes a link between your Discord and Fluxer accounts.</li>
+          <li>On Fluxer, use the same commands with <code>!</code> (<code>!profile</code>, <code>!forget</code>,
+            <code>!profiling off</code>, <code>!unlink</code>).</li>
+          <li>Server admins can clear the current conversation in a channel with <code>/reset</code>.</li>
+          <li>For anything else, such as a copy of your data or deleting your voice averages, reminders or log entries,
+            contact {{contact}}.</li>
+        </ul>
+        <p>Server admins can remove the bot from their server at any time.</p>
+      </section>
+
+      <section>
+        <h2>Security</h2>
+        <p>Data is stored on the owner's own computer. It isn't on a shared cloud service. The admin dashboard is only
+          reachable over HTTPS and needs a sign-in. No system is perfectly secure, but access is limited to the owner and
+          the administrators they choose.</p>
+      </section>
+
+      <section>
+        <h2>Age</h2>
+        <p>You must be old enough to use Discord in your country (at least 13) to use {{name}}. It isn't meant for
+          children, and we don't knowingly collect data from anyone younger.</p>
+      </section>
+
+      <section>
+        <h2>Changes</h2>
+        <p>If this policy changes, the new version is posted here with a new effective date. Continuing to use the bot
+          after a change means you accept the updated policy.</p>
+      </section>
+
+      <section>
+        <h2>Contact</h2>
+        <p>Contact {{contact}}.</p>
+      </section>
+    </article>
+  </main>
+
+  <footer class="wrap h-foot">
+    <span class="h-foot-name">{{name}}</span>
+    <a href="/status">Status</a>
+    <a href="/help">Help</a>
+    <a href="/terms">Terms of service</a>
+    <a href="/privacy">Privacy policy</a>
+    <p class="h-foot-credit">Built with <span class="heart" aria-label="love">♥</span> by logicalgamer and Claude. Hosted on a self&#8209;hosted Linux server.</p>
+  </footer>
+</body>
+</html>

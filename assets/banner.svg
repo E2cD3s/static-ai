@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1360" height="480" viewBox="0 0 1360 480">
+  <defs>
+    <radialGradient id="bg" cx="62%" cy="45%" r="75%">
+      <stop offset="0" stop-color="#2b1150"/>
+      <stop offset="0.55" stop-color="#110725"/>
+      <stop offset="1" stop-color="#05030b"/>
+    </radialGradient>
+    <linearGradient id="wave" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00e5ff"/>
+      <stop offset="1" stop-color="#ff2bd6"/>
+    </linearGradient>
+    <radialGradient id="vignette" cx="55%" cy="50%" r="80%">
+      <stop offset="0.55" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.8"/>
+    </radialGradient>
+
+    <filter id="static" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="7" stitchTiles="stitch"/>
+      <feColorMatrix type="matrix" values="0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0 0 0 0 0.17"/>
+    </filter>
+    <pattern id="scan" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="3" fill="#000" opacity="0.35"/>
+    </pattern>
+    <filter id="glow" x="-20%" y="-50%" width="140%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softglow" x="-20%" y="-50%" width="140%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <text id="word" x="800" y="262" text-anchor="middle" font-family="Bahnschrift, 'Arial Black', Impact, sans-serif"
+          font-weight="700" font-size="164" letter-spacing="22" fill="currentColor">STATIC</text>
+
+    <clipPath id="slice1"><rect x="0" y="176" width="1360" height="16"/></clipPath>
+    <clipPath id="slice2"><rect x="0" y="228" width="1360" height="12"/></clipPath>
+  </defs>
+
+  <!-- background -->
+  <rect width="1360" height="480" fill="url(#bg)"/>
+  <rect width="1360" height="480" filter="url(#static)"/>
+
+  <!-- audio waveform across the banner -->
+  <g fill="url(#wave)" opacity="0.38" filter="url(#softglow)">
+    <rect x="20" y="236" width="8" height="8" rx="4"/>
+    <rect x="36" y="233.8" width="8" height="12.4" rx="4"/>
+    <rect x="52" y="232.2" width="8" height="15.5" rx="4"/>
+    <rect x="68" y="232.8" width="8" height="14.5" rx="4"/>
+    <rect x="84" y="234.8" width="8" height="10.3" rx="4"/>
+    <rect x="100" y="232.6" width="8" height="14.9" rx="4"/>
+    <rect x="116" y="231.9" width="8" height="16.2" rx="4"/>
+    <rect x="132" y="232.6" width="8" height="14.8" rx="4"/>
+    <rect x="148" y="235.8" width="8" height="8.5" rx="4"/>
+    <rect x="164" y="233" width="8" height="14" rx="4"/>
+    <rect x="180" y="234.4" width="8" height="11.2" rx="4"/>
+    <rect x="196" y="235.6" width="8" height="8.9" rx="4"/>
+    <rect x="212" y="231.8" width="8" height="16.4" rx="4"/>
+    <rect x="228" y="234.1" width="8" height="11.8" rx="4"/>
+    <rect x="244" y="226.1" width="8" height="27.8" rx="4"/>
+    <rect x="260" y="229.3" width="8" height="21.4" rx="4"/>
+    <rect x="276" y="232.3" width="8" height="15.4" rx="4"/>
+    <rect x="292" y="230.4" width="8" height="19.2" rx="4"/>
+    <rect x="308" y="230" width="8" height="20.1" rx="4"/>
+    <rect x="324" y="229.8" width="8" height="20.5" rx="4"/>
+    <rect x="340" y="228.4" width="8" height="23.1" rx="4"/>
+    <rect x="356" y="225.2" width="8" height="29.7" rx="4"/>
+    <rect x="372" y="219" width="8" height="42.1" rx="4"/>
+    <rect x="388" y="227.2" width="8" height="25.7" rx="4"/>
+    <rect x="404" y="213.1" width="8" height="53.8" rx="4"/>
+    <rect x="420" y="211" width="8" height="58.1" rx="4"/>
+    <rect x="436" y="204" width="8" height="72" rx="4"/>
+    <rect x="452" y="214" width="8" height="51.9" rx="4"/>
+    <rect x="468" y="213.6" width="8" height="52.9" rx="4"/>
+    <rect x="484" y="194.2" width="8" height="91.5" rx="4"/>
+    <rect x="500" y="217.6" width="8" height="44.9" rx="4"/>
+    <rect x="516" y="211.3" width="8" height="57.4" rx="4"/>
+    <rect x="532" y="193.6" width="8" height="92.7" rx="4"/>
+    <rect x="548" y="181" width="8" height="118" rx="4"/>
+    <rect x="564" y="189.6" width="8" height="100.7" rx="4"/>
+    <rect x="580" y="205.8" width="8" height="68.4" rx="4"/>
+    <rect x="596" y="198.2" width="8" height="83.7" rx="4"/>
+    <rect x="612" y="208.8" width="8" height="62.3" rx="4"/>
+    <rect x="628" y="191.2" width="8" height="97.7" rx="4"/>
+    <rect x="644" y="180.4" width="8" height="119.3" rx="4"/>
+    <rect x="660" y="191" width="8" height="98.1" rx="4"/>
+    <rect x="676" y="196.8" width="8" height="86.3" rx="4"/>
+    <rect x="692" y="184.4" width="8" height="111.2" rx="4"/>
+    <rect x="708" y="173.6" width="8" height="132.7" rx="4"/>
+    <rect x="724" y="168.4" width="8" height="143.3" rx="4"/>
+    <rect x="740" y="181.2" width="8" height="117.6" rx="4"/>
+    <rect x="756" y="189.5" width="8" height="101" rx="4"/>
+    <rect x="772" y="157.6" width="8" height="164.7" rx="4"/>
+    <rect x="788" y="157.6" width="8" height="164.8" rx="4"/>
+    <rect x="804" y="181" width="8" height="117.9" rx="4"/>
+    <rect x="820" y="180" width="8" height="119.9" rx="4"/>
+    <rect x="836" y="178.4" width="8" height="123.2" rx="4"/>
+    <rect x="852" y="196.7" width="8" height="86.6" rx="4"/>
+    <rect x="868" y="158" width="8" height="164" rx="4"/>
+    <rect x="884" y="156.5" width="8" height="167" rx="4"/>
+    <rect x="900" y="199.6" width="8" height="80.8" rx="4"/>
+    <rect x="916" y="176.2" width="8" height="127.5" rx="4"/>
+    <rect x="932" y="150.9" width="8" height="178.2" rx="4"/>
+    <rect x="948" y="185.8" width="8" height="108.3" rx="4"/>
+    <rect x="964" y="189.7" width="8" height="100.6" rx="4"/>
+    <rect x="980" y="200.4" width="8" height="79.2" rx="4"/>
+    <rect x="996" y="190.8" width="8" height="98.5" rx="4"/>
+    <rect x="1012" y="203.5" width="8" height="73" rx="4"/>
+    <rect x="1028" y="191.8" width="8" height="96.5" rx="4"/>
+    <rect x="1044" y="170.1" width="8" height="139.8" rx="4"/>
+    <rect x="1060" y="199" width="8" height="81.9" rx="4"/>
+    <rect x="1076" y="185.7" width="8" height="108.6" rx="4"/>
+    <rect x="1092" y="216.6" width="8" height="46.8" rx="4"/>
+    <rect x="1108" y="214.4" width="8" height="51.2" rx="4"/>
+    <rect x="1124" y="211.7" width="8" height="56.6" rx="4"/>
+    <rect x="1140" y="219.5" width="8" height="41" rx="4"/>
+    <rect x="1156" y="195.9" width="8" height="88.2" rx="4"/>
+    <rect x="1172" y="203.2" width="8" height="73.7" rx="4"/>
+    <rect x="1188" y="206.8" width="8" height="66.5" rx="4"/>
+    <rect x="1204" y="203.1" width="8" height="73.8" rx="4"/>
+    <rect x="1220" y="206.5" width="8" height="67" rx="4"/>
+    <rect x="1236" y="217.4" width="8" height="45.1" rx="4"/>
+    <rect x="1252" y="219" width="8" height="42.1" rx="4"/>
+    <rect x="1268" y="230.3" width="8" height="19.4" rx="4"/>
+    <rect x="1284" y="215" width="8" height="49.9" rx="4"/>
+    <rect x="1300" y="227.6" width="8" height="24.7" rx="4"/>
+    <rect x="1316" y="222.5" width="8" height="35" rx="4"/>
+    <rect x="1332" y="231" width="8" height="17.9" rx="4"/>
+  </g>
+  <rect x="0" y="239" width="1360" height="2" fill="url(#wave)" opacity="0.55" filter="url(#softglow)"/>
+
+  <!-- wordmark with chromatic aberration -->
+  <use href="#word" xlink:href="#word" transform="translate(-8,0)" style="color:#00e5ff; mix-blend-mode:screen" opacity="0.9"/>
+  <use href="#word" xlink:href="#word" transform="translate(8,0)" style="color:#ff2bd6; mix-blend-mode:screen" opacity="0.9"/>
+  <use href="#word" xlink:href="#word" style="color:#effcff" filter="url(#glow)"/>
+  <g clip-path="url(#slice1)"><use href="#word" xlink:href="#word" transform="translate(26,0)" style="color:#ff2bd6"/></g>
+  <g clip-path="url(#slice2)"><use href="#word" xlink:href="#word" transform="translate(-30,0)" style="color:#00e5ff"/></g>
+
+  <!-- taglines -->
+  <text x="800" y="322" text-anchor="middle" font-family="Bahnschrift, 'Segoe UI', sans-serif" font-weight="600"
+        font-size="30" letter-spacing="9" fill="#bff4ff" opacity="0.92" filter="url(#softglow)">THE VOICE IN YOUR VOICE CHAT</text>
+  <text x="800" y="366" text-anchor="middle" font-family="Bahnschrift, 'Segoe UI', sans-serif" font-weight="500"
+        font-size="20" letter-spacing="7" fill="#ff7be3" opacity="0.85">NO CLOUD · NO FILTER · NO CHILL</text>
+
+  <!-- ON AIR badge -->
+  <g transform="translate(1178,34)" filter="url(#softglow)">
+    <rect x="0" y="0" width="148" height="44" rx="22" fill="#1a0610" fill-opacity="0.6" stroke="#ff3b5c" stroke-width="2.5"/>
+    <circle cx="26" cy="22" r="8" fill="#ff3b5c"/>
+    <text x="44" y="30" font-family="Bahnschrift, 'Segoe UI', sans-serif" font-weight="700" font-size="22"
+          letter-spacing="4" fill="#ff6b84">ON AIR</text>
+  </g>
+
+  <!-- glitch artifacts -->
+  <rect x="470" y="150" width="120" height="5" fill="#00e5ff" opacity="0.8"/>
+  <rect x="1010" y="286" width="140" height="5" fill="#ff2bd6" opacity="0.8"/>
+  <rect x="1180" y="120" width="60" height="3" fill="#ffffff" opacity="0.4"/>
+  <rect x="420" y="300" width="50" height="3" fill="#ff2bd6" opacity="0.55"/>
+
+  <!-- CRT scanlines + vignette -->
+  <rect width="1360" height="480" fill="url(#scan)" opacity="0.5"/>
+  <rect width="1360" height="480" fill="url(#vignette)"/>
+</svg>

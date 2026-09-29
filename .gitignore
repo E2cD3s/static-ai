@@ -1,0 +1,10 @@
+config.yaml
+.venv/
+models/
+data/
+install.log
+.install_state
+__pycache__/
+*.pyc
+*.part
+.ruff_cache/
