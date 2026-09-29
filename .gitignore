@@ -8,3 +8,6 @@ __pycache__/
 *.pyc
 *.part
 .ruff_cache/
+
+# Optional private theme for this install, loaded after style.css (see README)
+voicebot/web/static/local.css

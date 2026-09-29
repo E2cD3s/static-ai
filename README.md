@@ -232,6 +232,12 @@ The bot serves a small site (`dashboard:` in config) at `dashboard.public_url`:
 The Developer Portal fields: Terms of Service URL `<public_url>/terms`, Privacy Policy URL `<public_url>/privacy`,
 Linked Roles Verification URL `<public_url>/linked-role` (optional).
 
+**Your own theme:** every page loads `voicebot/web/static/local.css` after `style.css`, if it exists. Put CSS there to
+re-theme your install (the easiest start is overriding the colour and font variables in `:root` at the top of
+`style.css`). It's git-ignored, so it survives updates and stays out of commits. Changes show on the next page reload,
+no restart needed. The page's Content-Security-Policy allows fonts from Google Fonts and images from the site itself
+or `data:` URIs.
+
 ## Tuning
 
 - **Snappier replies:** lower `voice.silence_short_ms` and `silence_ms`. Too low and it will cut people off.
