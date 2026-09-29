@@ -232,11 +232,13 @@ The bot serves a small site (`dashboard:` in config) at `dashboard.public_url`:
 The Developer Portal fields: Terms of Service URL `<public_url>/terms`, Privacy Policy URL `<public_url>/privacy`,
 Linked Roles Verification URL `<public_url>/linked-role` (optional).
 
-**Your own theme:** every page loads `voicebot/web/static/local.css` after `style.css`, if it exists. Put CSS there to
-re-theme your install (the easiest start is overriding the colour and font variables in `:root` at the top of
-`style.css`). It's git-ignored, so it survives updates and stays out of commits. Changes show on the next page reload,
-no restart needed. The page's Content-Security-Policy allows fonts from Google Fonts and images from the site itself
-or `data:` URIs.
+**Your own theme:** every page loads `voicebot/web/static/local.css` after `style.css`, and `local.js` (deferred), if
+they exist. Put CSS in `local.css` to re-theme your install (the easiest start is overriding the colour and font
+variables in `:root` at the top of `style.css`), and use `local.js` to add your own elements, such as links to your site.
+Files for them (images) can go in `voicebot/web/static/local/`. All three are git-ignored, so they survive updates and
+stay out of commits. Without them, the browser just gets a harmless 404. Changes show on the next page reload,
+no restart needed. The page's Content-Security-Policy allows fonts from Google Fonts, images from the site itself or
+`data:` URIs, and scripts only from the site itself (no inline scripts).
 
 ## Tuning
 
